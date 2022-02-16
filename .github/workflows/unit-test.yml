@@ -7,8 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       PROJECT-NAME: ${{ steps.yaml-importer.outputs.project2_name }}
-      TEST1-FLAG: ${{ steps.yaml-importer.outputs.project2_test_test2 }}
-      TEST2-FLAG: ${{ steps.yaml-importer.outputs.project2_test_test3 }}
+      TEST1-FLAG: ${{ steps.yaml-importer.outputs.project2_test_test1 }}
+      TEST2-FLAG: ${{ steps.yaml-importer.outputs.project2_test_test2 }}
       TEST-CMD: ${{ steps.yaml-importer.outputs.project2_test_cmd }}
       CI-CODESCAN: ${{ steps.yaml-importer.outputs.project2_ci-pipeline_codescan }}
       CI-BLD-CMD: ${{ steps.yaml-importer.outputs.project2_ci-pipeline_build-cmd }}
@@ -20,6 +20,7 @@ jobs:
         uses: partior-libs/gcs-yaml-importer@main
         with:
           yaml-file: test-yaml/testing.yaml
+          query-path: .project
       - name: Start import
         id: yaml-importer
         run:  |
@@ -52,8 +53,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       PROJECT-NAME: ${{ steps.yaml-importer.outputs.name }}
-      TEST1-FLAG: ${{ steps.yaml-importer.outputs.test_test2 }}
-      TEST2-FLAG: ${{ steps.yaml-importer.outputs.test_test3 }}
+      TEST1-FLAG: ${{ steps.yaml-importer.outputs.test_test1 }}
+      TEST2-FLAG: ${{ steps.yaml-importer.outputs.test_test2 }}
       TEST-CMD: ${{ steps.yaml-importer.outputs.test_cmd }}
       CI-CODESCAN: ${{ steps.yaml-importer.outputs.ci-pipeline_codescan }}
       CI-BLD-CMD: ${{ steps.yaml-importer.outputs.ci-pipeline_build-cmd }}
@@ -101,8 +102,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       PROJECT-NAME: ${{ steps.yaml-importer.outputs.name }}
-      TEST1-FLAG: ${{ steps.yaml-importer.outputs.test_test2 }}
-      TEST2-FLAG: ${{ steps.yaml-importer.outputs.test_test3 }}
+      TEST1-FLAG: ${{ steps.yaml-importer.outputs.test_test1 }}
+      TEST2-FLAG: ${{ steps.yaml-importer.outputs.test_test2 }}
       TEST-CMD: ${{ steps.yaml-importer.outputs.test_cmd }}
       CI-CODESCAN: ${{ steps.yaml-importer.outputs.ci-pipeline_codescan }}
       CI-BLD-CMD: ${{ steps.yaml-importer.outputs.ci-pipeline_build-cmd }}

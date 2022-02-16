@@ -1,5 +1,5 @@
 name: 'Partior - Yaml Importer to GitHub flat variable'
-description: 'Read and create an YAML importer file into GitHub Action's flat variable'
+description: 'Read and create an YAML importer file into GitHub Actions flat variable'
 inputs:
   yaml-file:  
     description: 'Path to YAML file'

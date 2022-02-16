@@ -20,6 +20,10 @@ inputYaml=$(echo "$1" |xargs)
 pathFilter=$(echo "$2" |xargs)
 importerFilename=$(echo "$3" |xargs)
 
+echo [DEBUG] Start...
+find . -type f
+ls -ltrah test-yaml/
+echo [DEBUG] End...
 if [[ ! -f "$inputYaml" ]]; then
   echo "[ERROR] $BASH_SOURCE (line:$LINENO): Unable to locate yaml file: $inputYaml"
   exit 1

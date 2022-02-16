@@ -41,6 +41,7 @@ function getKeys()
         currentKey='.'
     fi
     echo [DEBUG] Start..[$currentKey]
+    echo "cat $inputYaml | yq -e \"$currentKey\" -o props"
     cat $inputYaml | yq -e "$currentKey" -o props
     echo [DEBUG] end..
     if (cat $inputYaml | yq -e "$currentKey" -o props 2>/dev/null >/dev/null); then

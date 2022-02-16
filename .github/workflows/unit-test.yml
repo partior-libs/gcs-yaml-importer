@@ -69,6 +69,9 @@ jobs:
       - name: Start import
         id: yaml-importer
         run:  |
+          find . -type f
+          echo and permission
+          ls -ltrah
           echo Running ...${{ steps.yaml-importer-creator.outputs.importer-filename}}
           ${{ steps.yaml-importer-creator.outputs.importer-filename}}
 

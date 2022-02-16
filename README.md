@@ -24,6 +24,7 @@ jobs:
       CD-NPROD-ENV: ${{ steps.yaml-importer.outputs.cd-pipeline_prod-environments }}
     steps:
       - name: Test with query scope and custom importer filename
+        id: yaml-importer-creator
         uses: partior-libs/gcs-yaml-importer@main
         with:
           yaml-file: test-yaml/testing.yaml
@@ -32,8 +33,8 @@ jobs:
       - name: Start import
         id: yaml-importer
         run: |
-          echo Running ...${{ steps.yaml-importer.outputs.importer-filename}}
-          ${{ steps.yaml-importer.outputs.importer-filename}}
+          echo Running ...${{ steps.yaml-importer-creator.outputs.importer-filename}}
+          ${{ steps.yaml-importer-creator.outputs.importer-filename}}
 
   test-scenario-3-consumer:
     runs-on: ubuntu-latest

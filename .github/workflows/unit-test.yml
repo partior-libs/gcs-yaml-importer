@@ -106,6 +106,7 @@ jobs:
       CI-BLD-CMD: ${{ steps.yaml-importer.outputs.ci-pipeline_build-cmd }}
       CD-NPROD-ENV: ${{ steps.yaml-importer.outputs.cd-pipeline_prod-environments }}
     steps:
+      - uses: actions/checkout@v2
       - name: Test with query scope and custom importer filename
         id: yaml-importer-creator
         uses: partior-libs/gcs-yaml-importer@main

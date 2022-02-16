@@ -20,10 +20,6 @@ inputYaml=$(echo "$1" |xargs)
 pathFilter=$(echo "$2" |xargs)
 importerFilename=$(echo "$3" |xargs)
 
-echo [DEBUG] Start...
-find . -type f
-ls -ltrah test-yaml/
-echo [DEBUG] End...
 if [[ ! -f "$inputYaml" ]]; then
   echo "[ERROR] $BASH_SOURCE (line:$LINENO): Unable to locate yaml file: $inputYaml"
   exit 1
@@ -44,10 +40,7 @@ function getKeys()
     if [[ "$currentKey" == "" ]]; then
         currentKey='.'
     fi
-    echo [DEBUG] Start..[$currentKey]
-    echo "cat $inputYaml | yq -e \"$currentKey\" -o props"
-    cat $inputYaml | yq -e "$currentKey" -o props
-    echo [DEBUG] end..
+
     if (cat $inputYaml | yq -e "$currentKey" -o props 2>/dev/null >/dev/null); then
         cat $inputYaml | yq -o props "$currentKey" | sed "s/ = /=/g" > $keyValueListFile
 

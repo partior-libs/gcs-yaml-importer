@@ -5,6 +5,14 @@ on: [push, pull_request, workflow_dispatch]
 jobs:
   test-scenario-1-reader:
     runs-on: ubuntu-latest
+    outputs:
+      PROJECT-NAME: ${{ steps.yaml-importer.outputs.project2_name }}
+      TEST1-FLAG: ${{ steps.yaml-importer.outputs.project2_test_test2 }}
+      TEST2-FLAG: ${{ steps.yaml-importer.outputs.project2_test_test3 }}
+      TEST-CMD: ${{ steps.yaml-importer.outputs.project2_test_cmd }}
+      CI-CODESCAN: ${{ steps.yaml-importer.outputs.project2_ci-pipeline_codescan }}
+      CI-BLD-CMD: ${{ steps.yaml-importer.outputs.project2_ci-pipeline_build-cmd }}
+      CD-NPROD-ENV: ${{ steps.yaml-importer.outputs.project2_cd-pipeline_prod-environments }}
     steps:
       - uses: actions/checkout@v2
       - name: Test without query scope
@@ -16,30 +24,39 @@ jobs:
         run:  |
           echo Running ...${{ steps.yaml-importer.outputs.importer-filename}}
           ${{ steps.yaml-importer.outputs.importer-filename}}
-        outputs:
-          PROJECT-NAME: ${{ steps.yaml-importer.outputs.project2_name }}
-          TEST1-FLAG: ${{ steps.yaml-importer.outputs.project2_test_test2 }}
-          TEST2-FLAG: ${{ steps.yaml-importer.outputs.project2_test_test3 }}
-          TEST-CMD: ${{ steps.yaml-importer.outputs.project2_test_cmd }}
-          CI-CODESCAN: ${{ steps.yaml-importer.outputs.project2_ci-pipeline_codescan }}
-          CI-BLD-CMD: ${{ steps.yaml-importer.outputs.project2_ci-pipeline_build-cmd }}
-          CD-NPROD-ENV: ${{ steps.yaml-importer.outputs.project2_cd-pipeline_prod-environments }}
+
   test-scenario-1-consumer:
     runs-on: ubuntu-latest
     needs: [ test-scenario-1-reader ]
+    env: 
+      PROJECT_NAME: ${{ needs.test-scenario-1-reader.outputs.PROJECT-NAME }}
+      TEST1_FLAG: ${{ needs.test-scenario-1-reader.outputs.TEST1-FLAG }}
+      TEST2_FLAG: ${{ needs.test-scenario-1-reader.outputs.TEST2-FLAG }}
+      TEST_CMD: ${{ needs.test-scenario-1-reader.outputs.TEST-CMD }}
+      CI_CODESCAN: ${{ needs.test-scenario-1-reader.outputs.CI-CODESCAN }}
+      CI_BLD_CMD: ${{ needs.test-scenario-1-reader.outputs.CI-BLD-CMD }}
+      CD_NPROD_ENV: ${{ needs.test-scenario-1-reader.outputs.CD-NPROD-ENV }}
     steps:
       - name: Reading from previous config reader 1
         run:  |
-          echo PROJECT-NAME: ${{ needs.test-scenario-1-reader.outputs.PROJECT-NAME }}
-          echo TEST1-FLAG: ${{ needs.test-scenario-1-reader.outputs.TEST1-FLAG }}
-          echo TEST2-FLAG: ${{ needs.test-scenario-1-reader.outputs.TEST2-FLAG }}
-          echo TEST-CMD: ${{ needs.test-scenario-1-reader.outputs.TEST-CMD }}
-          echo CI-CODESCAN: ${{ needs.test-scenario-1-reader.outputs.CI-CODESCAN }}
-          echo CI-BLD-CMD: ${{ needs.test-scenario-1-reader.outputs.CI-BLD-CMD }}
-          echo CD-NPROD-ENV: ${{ needs.test-scenario-1-reader.outputs.CD-NPROD-ENV }}
+          echo PROJECT_NAME: ${PROJECT_NAME-NAME}
+          echo TEST1_FLAG: ${TEST1_FLAG-FLAG}
+          echo TEST2_FLAG: ${TEST2_FLAG}
+          echo TEST_CMD: ${TEST_CMD}
+          echo CI_CODESCAN: ${CI_CODESCAN}
+          echo CI_BLD_CMD: ${CI_BLD_CMD}
+          echo CD_NPROD_ENV: ${CD_NPROD_ENV}
 
   test-scenario-2-reader:
     runs-on: ubuntu-latest
+    outputs:
+      PROJECT-NAME: ${{ steps.yaml-importer.outputs.name }}
+      TEST1-FLAG: ${{ steps.yaml-importer.outputs.test_test2 }}
+      TEST2-FLAG: ${{ steps.yaml-importer.outputs.test_test3 }}
+      TEST-CMD: ${{ steps.yaml-importer.outputs.test_cmd }}
+      CI-CODESCAN: ${{ steps.yaml-importer.outputs.ci-pipeline_codescan }}
+      CI-BLD-CMD: ${{ steps.yaml-importer.outputs.ci-pipeline_build-cmd }}
+      CD-NPROD-ENV: ${{ steps.yaml-importer.outputs.cd-pipeline_prod-environments }}
     steps:
       - uses: actions/checkout@v2
       - name: Test with query scope
@@ -51,30 +68,39 @@ jobs:
         run:  |
           echo Running ...${{ steps.yaml-importer.outputs.importer-filename}}
           ${{ steps.yaml-importer.outputs.importer-filename}}
-        outputs:
-          PROJECT-NAME: ${{ steps.yaml-importer.outputs.name }}
-          TEST1-FLAG: ${{ steps.yaml-importer.outputs.test_test2 }}
-          TEST2-FLAG: ${{ steps.yaml-importer.outputs.test_test3 }}
-          TEST-CMD: ${{ steps.yaml-importer.outputs.test_cmd }}
-          CI-CODESCAN: ${{ steps.yaml-importer.outputs.ci-pipeline_codescan }}
-          CI-BLD-CMD: ${{ steps.yaml-importer.outputs.ci-pipeline_build-cmd }}
-          CD-NPROD-ENV: ${{ steps.yaml-importer.outputs.cd-pipeline_prod-environments }}
+
   test-scenario-2-consumer:
     runs-on: ubuntu-latest
     needs: [ test-scenario-2-reader ]
+    env: 
+      PROJECT_NAME: ${{ needs.test-scenario-2-reader.outputs.PROJECT-NAME }}
+      TEST1_FLAG: ${{ needs.test-scenario-2-reader.outputs.TEST1-FLAG }}
+      TEST2_FLAG: ${{ needs.test-scenario-2-reader.outputs.TEST2-FLAG }}
+      TEST_CMD: ${{ needs.test-scenario-2-reader.outputs.TEST-CMD }}
+      CI_CODESCAN: ${{ needs.test-scenario-2-reader.outputs.CI-CODESCAN }}
+      CI_BLD_CMD: ${{ needs.test-scenario-2-reader.outputs.CI-BLD-CMD }}
+      CD_NPROD_ENV: ${{ needs.test-scenario-2-reader.outputs.CD-NPROD-ENV }}
     steps:
       - name: Reading from previous config reader 2
         run:  |
-          echo PROJECT-NAME: ${{ needs.test-scenario-2-reader.outputs.PROJECT-NAME }}
-          echo TEST1-FLAG: ${{ needs.test-scenario-2-reader.outputs.TEST1-FLAG }}
-          echo TEST2-FLAG: ${{ needs.test-scenario-2-reader.outputs.TEST2-FLAG }}
-          echo TEST-CMD: ${{ needs.test-scenario-2-reader.outputs.TEST-CMD }}
-          echo CI-CODESCAN: ${{ needs.test-scenario-2-reader.outputs.CI-CODESCAN }}
-          echo CI-BLD-CMD: ${{ needs.test-scenario-2-reader.outputs.CI-BLD-CMD }}
-          echo CD-NPROD-ENV: ${{ needs.test-scenario-2-reader.outputs.CD-NPROD-ENV }}
+          echo PROJECT_NAME: ${PROJECT_NAME-NAME}
+          echo TEST1_FLAG: ${TEST1_FLAG-FLAG}
+          echo TEST2_FLAG: ${TEST2_FLAG}
+          echo TEST_CMD: ${TEST_CMD}
+          echo CI_CODESCAN: ${CI_CODESCAN}
+          echo CI_BLD_CMD: ${CI_BLD_CMD}
+          echo CD_NPROD_ENV: ${CD_NPROD_ENV}
 
   test-scenario-3-reader:
     runs-on: ubuntu-latest
+    outputs:
+      PROJECT-NAME: ${{ steps.yaml-importer.outputs.name }}
+      TEST1-FLAG: ${{ steps.yaml-importer.outputs.test_test2 }}
+      TEST2-FLAG: ${{ steps.yaml-importer.outputs.test_test3 }}
+      TEST-CMD: ${{ steps.yaml-importer.outputs.test_cmd }}
+      CI-CODESCAN: ${{ steps.yaml-importer.outputs.ci-pipeline_codescan }}
+      CI-BLD-CMD: ${{ steps.yaml-importer.outputs.ci-pipeline_build-cmd }}
+      CD-NPROD-ENV: ${{ steps.yaml-importer.outputs.cd-pipeline_prod-environments }}
     steps:
       - name: Test with query scope and custom importer filename
         uses: partior-libs/gcs-yaml-importer@main
@@ -86,24 +112,25 @@ jobs:
         run: |
           echo Running ...${{ steps.yaml-importer.outputs.importer-filename}}
           ${{ steps.yaml-importer.outputs.importer-filename}}
-        outputs:
-          PROJECT-NAME: ${{ steps.yaml-importer.outputs.name }}
-          TEST1-FLAG: ${{ steps.yaml-importer.outputs.test_test2 }}
-          TEST2-FLAG: ${{ steps.yaml-importer.outputs.test_test3 }}
-          TEST-CMD: ${{ steps.yaml-importer.outputs.test_cmd }}
-          CI-CODESCAN: ${{ steps.yaml-importer.outputs.ci-pipeline_codescan }}
-          CI-BLD-CMD: ${{ steps.yaml-importer.outputs.ci-pipeline_build-cmd }}
-          CD-NPROD-ENV: ${{ steps.yaml-importer.outputs.cd-pipeline_prod-environments }}
+
   test-scenario-3-consumer:
     runs-on: ubuntu-latest
     needs: [ test-scenario-3-reader ]
+    env: 
+      PROJECT_NAME: ${{ needs.test-scenario-3-reader.outputs.PROJECT-NAME }}
+      TEST1_FLAG: ${{ needs.test-scenario-3-reader.outputs.TEST1-FLAG }}
+      TEST2_FLAG: ${{ needs.test-scenario-3-reader.outputs.TEST2-FLAG }}
+      TEST_CMD: ${{ needs.test-scenario-3-reader.outputs.TEST-CMD }}
+      CI_CODESCAN: ${{ needs.test-scenario-3-reader.outputs.CI-CODESCAN }}
+      CI_BLD_CMD: ${{ needs.test-scenario-3-reader.outputs.CI-BLD-CMD }}
+      CD_NPROD_ENV: ${{ needs.test-scenario-3-reader.outputs.CD-NPROD-ENV }}
     steps:
       - name: Reading from previous config reader 3
         run:  |
-          echo PROJECT-NAME: ${{ needs.test-scenario-3-reader.outputs.PROJECT-NAME }}
-          echo TEST1-FLAG: ${{ needs.test-scenario-3-reader.outputs.TEST1-FLAG }}
-          echo TEST2-FLAG: ${{ needs.test-scenario-3-reader.outputs.TEST2-FLAG }}
-          echo TEST-CMD: ${{ needs.test-scenario-3-reader.outputs.TEST-CMD }}
-          echo CI-CODESCAN: ${{ needs.test-scenario-3-reader.outputs.CI-CODESCAN }}
-          echo CI-BLD-CMD: ${{ needs.test-scenario-3-reader.outputs.CI-BLD-CMD }}
-          echo CD-NPROD-ENV: ${{ needs.test-scenario-3-reader.outputs.CD-NPROD-ENV }}
+          echo PROJECT_NAME: ${PROJECT_NAME-NAME}
+          echo TEST1_FLAG: ${TEST1_FLAG-FLAG}
+          echo TEST2_FLAG: ${TEST2_FLAG}
+          echo TEST_CMD: ${TEST_CMD}
+          echo CI_CODESCAN: ${CI_CODESCAN}
+          echo CI_BLD_CMD: ${CI_BLD_CMD}
+          echo CD_NPROD_ENV: ${CD_NPROD_ENV}

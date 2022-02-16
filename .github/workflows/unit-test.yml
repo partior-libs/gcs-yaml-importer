@@ -75,6 +75,7 @@ jobs:
 
   test-scenario-3-reader:
     runs-on: ubuntu-latest
+    steps:
       - name: Test with query scope and custom importer filename
         uses: partior-libs/gcs-yaml-importer@main
         with:

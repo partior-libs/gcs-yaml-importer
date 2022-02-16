@@ -40,8 +40,11 @@ function getKeys()
     if [[ "$currentKey" == "" ]]; then
         currentKey="."
     fi
-    if (cat $inputYaml | /usr/bin/yq -e "$currentKey" -o props 2>/dev/null >/dev/null); then
-        cat $inputYaml | /usr/bin/yq -o props "$currentKey" | sed "s/ = /=/g" > $keyValueListFile
+    echo [DEBUG] Start..
+    cat $inputYaml | yq -e "$currentKey" -o props
+    echo [DEBUG] end..
+    if (cat $inputYaml | yq -e "$currentKey" -o props 2>/dev/null >/dev/null); then
+        cat $inputYaml | yq -o props "$currentKey" | sed "s/ = /=/g" > $keyValueListFile
 
         # Init vars
         regex='^.*\.[0-9]+$'

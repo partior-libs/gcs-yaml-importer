@@ -30,6 +30,7 @@ jobs:
           query-path: .project3
           output-file: custom-importer.sh
       - name: Start import
+        id: yaml-importer
         run: |
           echo Running ...${{ steps.yaml-importer.outputs.importer-filename}}
           ${{ steps.yaml-importer.outputs.importer-filename}}
@@ -48,8 +49,8 @@ jobs:
     steps:
       - name: Reading from previous config reader 3
         run:  |
-          echo PROJECT_NAME: ${PROJECT_NAME-NAME}
-          echo TEST1_FLAG: ${TEST1_FLAG-FLAG}
+          echo PROJECT_NAME: ${PROJECT_NAME}
+          echo TEST1_FLAG: ${TEST1_FLAG}
           echo TEST2_FLAG: ${TEST2_FLAG}
           echo TEST_CMD: ${TEST_CMD}
           echo CI_CODESCAN: ${CI_CODESCAN}

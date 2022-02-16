@@ -1,0 +1,29 @@
+name: 'Partior - Yaml Importer to GitHub flat variable'
+description: 'Read and create an YAML importer file into GitHub Action's flat variable'
+inputs:
+  yaml-file:  
+    description: 'Path to YAML file'
+    required: true
+    default: 'default-config.yaml'
+  query-path:  
+    description: 'Path of config to be read'
+    required: false
+    default: '.'
+  output-file:  
+    description: 'Custom path of the output file'
+    required: false
+    default: ''
+outputs:
+  importer-filename:
+    description: "Filename of the importer script"
+    value: ${{ steps.importer.outputs.filename }}
+runs:
+  using: "composite"
+  steps:
+    - run: ${{ github.action_path }}/scripts/yaml-converter.sh "${{ inputs.yaml-file }}" "${{ inputs.query-path }}" "${{ inputs.output-file }}" 
+      shell: bash
+    - id: importer
+      run: echo "::set-output name=filename::$(echo $(${{ github.action_path }}/scripts/get-importer-filename.sh ${{ inputs.output-file }} ))"
+      shell: bash
+    - run: echo Done creating importer file...
+      shell: bash

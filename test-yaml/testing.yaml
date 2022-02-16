@@ -1,0 +1,187 @@
+---
+project:
+  name: smc-settlement-utility
+  name2: lala
+  name3: lala
+  test:
+    test1: true
+    test2: false
+    cmd:
+      - echo 123
+      - echo 234
+  ci-pipeline:
+    codescan: true
+    build-cmd: |
+      echo 123
+      echo 456
+    packager: true
+  cd-pipeline:
+    nprod-environments:
+      - dev02
+      - uat
+    prod-environments:
+      - dev02
+      - uat  
+project1:
+  name: smc-settlement-utility2
+  name2: lala2
+  name3: lala2
+  test:
+    test1: true
+    test2: false
+    cmd:
+      - echo 123
+      - echo 234
+  ci-pipeline:
+    codescan: true
+    build-cmd:
+      echo 123
+      echo 456
+    packager: true
+  cd-pipeline:
+    nprod-environments:
+      - dev02
+      - uat
+    prod-environments:
+      - dev02
+      - uat  
+project2:
+  name: smc-settlement-utility
+  name2: lala
+  name3: lala
+  test:
+    test1: true
+    test2: false
+    cmd:
+      - echo 123
+      - echo 234
+  ci-pipeline:
+    codescan: true
+    build-cmd: |
+      echo 123
+      echo 456
+    packager: true
+  cd-pipeline:
+    nprod-environments:
+      - dev02
+      - uat
+    prod-environments:
+      - dev02
+      - uat  
+project3:
+  name: smc-settlement-utility
+  name2: lala
+  name3: lala
+  test:
+    test1: true
+    test2: false
+    cmd:
+      - echo 123
+      - echo 234
+  ci-pipeline:
+    codescan: true
+    build-cmd: |
+      echo 123
+      echo 456
+    packager: true
+  cd-pipeline:
+    nprod-environments:
+      - dev02
+      - uat
+    prod-environments:
+      - dev02
+      - uat  
+project4:
+  name: smc-settlement-utility
+  name2: lala
+  name3: lala
+  test:
+    test1: true
+    test2: false
+    cmd:
+      - echo 123
+      - echo 234
+  ci-pipeline:
+    codescan: true
+    build-cmd: |
+      echo 123
+      echo 456
+    packager: true
+  cd-pipeline:
+    nprod-environments:
+      - dev02
+      - uat
+    prod-environments:
+      - dev02
+      - uat  
+project5:
+  name: smc-settlement-utility
+  name2: lala
+  name3: lala
+  test:
+    test1: true
+    test2: false
+    cmd:
+      - echo 123
+      - echo 234
+  ci-pipeline:
+    codescan: true
+    build-cmd: |
+      echo 123
+      echo 456
+    packager: true
+  cd-pipeline:
+    nprod-environments:
+      - dev02
+      - uat
+    prod-environments:
+      - dev02
+      - uat  
+project6:
+  name: smc-settlement-utility
+  name2: lala
+  name3: lala
+  test:
+    test1: true
+    test2: false
+    cmd:
+      - echo 123
+      - echo 234
+  ci-pipeline:
+    codescan: true
+    build-cmd: |
+      echo 123
+      echo 456
+    packager: true
+  cd-pipeline:
+    nprod-environments:
+      - dev02
+      - uat
+    prod-environments:
+      - dev02
+      - uat  
+project7:
+  name: smc-settlement-utility
+  name2: lala
+  name3: lala
+  test:
+    test1: true
+    test2: false
+    cmd:
+      - echo 123
+      - echo 234
+  ci-pipeline:
+    codescan: true
+    build-cmd: |
+      echo 123
+      echo 456
+    packager: true
+  cd-pipeline:
+    nprod-environments:
+      - dev02
+      - uat
+    prod-environments:
+      - dev02
+      - uat  
+    
+

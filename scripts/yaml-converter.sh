@@ -38,9 +38,9 @@ function getKeys()
     local currentKey=$1
     # Default to initial start if no key path
     if [[ "$currentKey" == "" ]]; then
-        currentKey="."
+        currentKey='.'
     fi
-    echo [DEBUG] Start..
+    echo [DEBUG] Start..[$currentKey]
     cat $inputYaml | yq -e "$currentKey" -o props
     echo [DEBUG] end..
     if (cat $inputYaml | yq -e "$currentKey" -o props 2>/dev/null >/dev/null); then

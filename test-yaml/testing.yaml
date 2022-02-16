@@ -1,6 +1,6 @@
 ---
 project:
-  name: smc-settlement-utility
+  name: smc-settlement-utility-default
   name2: lala
   name3: lala
   test:
@@ -23,7 +23,7 @@ project:
       - dev02
       - uat  
 project1:
-  name: smc-settlement-utility2
+  name: smc-settlement-utility-1
   name2: lala2
   name3: lala2
   test:
@@ -46,7 +46,7 @@ project1:
       - dev02
       - uat  
 project2:
-  name: smc-settlement-utility
+  name: smc-settlement-utility-2
   name2: lala
   name3: lala
   test:
@@ -69,7 +69,7 @@ project2:
       - dev02
       - uat  
 project3:
-  name: smc-settlement-utility
+  name: smc-settlement-utility-3
   name2: lala
   name3: lala
   test:
@@ -92,7 +92,7 @@ project3:
       - dev02
       - uat  
 project4:
-  name: smc-settlement-utility
+  name: smc-settlement-utility-4
   name2: lala
   name3: lala
   test:
@@ -115,7 +115,7 @@ project4:
       - dev02
       - uat  
 project5:
-  name: smc-settlement-utility
+  name: smc-settlement-utility-5
   name2: lala
   name3: lala
   test:
@@ -138,7 +138,7 @@ project5:
       - dev02
       - uat  
 project6:
-  name: smc-settlement-utility
+  name: smc-settlement-utility-6
   name2: lala
   name3: lala
   test:
@@ -161,7 +161,7 @@ project6:
       - dev02
       - uat  
 project7:
-  name: smc-settlement-utility
+  name: smc-settlement-utility-7
   name2: lala
   name3: lala
   test:

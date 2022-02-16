@@ -110,7 +110,7 @@ jobs:
         id: yaml-importer-creator
         uses: partior-libs/gcs-yaml-importer@main
         with:
-          yaml-file: "test-yaml/testing.yaml"
+          yaml-file: test-yaml/testing.yaml
           query-path: .project3
           output-file: custom-importer.sh
       - name: Start import

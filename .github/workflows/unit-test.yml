@@ -168,14 +168,16 @@ jobs:
         with:
           name: ${{ env.CONFIG_IMPORTER_4 }}
       - name: Start import
+        id: yml-config
         run: |
           echo Running ...${{ env.CONFIG_IMPORTER_4 }}
           chmod +755 ./${{ env.CONFIG_IMPORTER_4 }}
           ./${{ env.CONFIG_IMPORTER_4 }}   
-      - name: Reading from previous config reader 3
+          echo project name:${name}
+      - name: Reading from previous config reader 4
         run:  |
-          echo PROJECT_NAME: ${PROJECT_NAME}
-          echo TEST1_FLAG: ${TEST1_FLAG}
+          echo PROJECT_NAME: ${name}
+          echo TEST1_FLAG: ${{ steps.yml-config.name }}
           echo TEST2_FLAG: ${TEST2_FLAG}
           echo TEST_CMD: ${TEST_CMD}
           echo CI_CODESCAN: ${CI_CODESCAN}

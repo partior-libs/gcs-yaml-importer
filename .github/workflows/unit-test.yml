@@ -173,11 +173,11 @@ jobs:
           echo Running ...${{ env.CONFIG_IMPORTER_4 }}
           chmod +755 ./${{ env.CONFIG_IMPORTER_4 }}
           ./${{ env.CONFIG_IMPORTER_4 }}   
-          echo project name:${name}
+          echo project name: $name , ${ name }
       - name: Reading from previous config reader 4
         run:  |
           echo PROJECT_NAME: ${name}
-          echo TEST1_FLAG: ${{ steps.yml-config.name }}
+          echo TEST1_FLAG: ${{ steps.yml-config.outputs.name }}
           echo TEST2_FLAG: ${TEST2_FLAG}
           echo TEST_CMD: ${TEST_CMD}
           echo CI_CODESCAN: ${CI_CODESCAN}

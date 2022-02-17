@@ -172,8 +172,8 @@ jobs:
         run: |
           echo Running ...${{ env.CONFIG_IMPORTER_4 }}
           chmod +755 ./${{ env.CONFIG_IMPORTER_4 }}
-          ./${{ env.CONFIG_IMPORTER_4 }}   
-          echo project name: $name , ${ name }
+          source ./${{ env.CONFIG_IMPORTER_4 }}   
+          echo project name: $name
       - name: Reading from previous config reader 4
         run:  |
           echo PROJECT_NAME: ${name}

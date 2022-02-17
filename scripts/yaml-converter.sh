@@ -72,7 +72,6 @@ function getKeys()
                     currentValueWithList="$currentValueWithList ]"
                     tmpCurrentKey=${currentParentKey//\./\_}
                     echo "echo ::set-output name=$tmpCurrentKey::$currentValueWithList" >> $importerFilename
-                    echo "echo export $tmpCurrentKey=\"$currentValueWithList\"" >> $importerFilename
                     currentValueWithList="["
                     prevKeyWithList="NIL_KEY"
                 fi
@@ -81,13 +80,11 @@ function getKeys()
                     currentValueWithList="$currentValueWithList ]"
                     tmpCurrentKey=${prevKeyWithList//\./\_}
                     echo "echo ::set-output name=$tmpCurrentKey::$currentValueWithList" >> $importerFilename
-                    echo "echo export $tmpCurrentKey=\"$currentValueWithList\"" >> $importerFilename
                     currentValueWithList="["
                     prevKeyWithList="NIL_KEY"
                 fi
                 currentKey=${currentKey//\./\_}
                 echo "echo ::set-output name=$currentKey::$currentValue" >> $importerFilename
-                echo "echo export $currentKey=\"$currentValue\"" >> $importerFilename
             fi
             
         done

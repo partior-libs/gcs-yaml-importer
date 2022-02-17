@@ -21,6 +21,10 @@ inputs:
     description: 'Custom path of the output file'
     required: false
     default: ''
+  upload:  
+    description: 'Flag to indicate if require to upload the importer file'
+    required: false
+    default: false
 outputs:
   importer-filename:
     description: "Filename of the importer script"
@@ -41,6 +45,7 @@ runs:
       run: echo "::set-output name=filename::$(echo $(${{ github.action_path }}/scripts/get-importer-filename.sh ${{ inputs.output-file }} ))"
       shell: bash
     - uses: actions/upload-artifact@v2
+      if: inputs.upload == true
       with:
         name: ${{ steps.importer.outputs.filename }}
         path: ${{ steps.importer.outputs.filename }}

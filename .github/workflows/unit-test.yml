@@ -157,12 +157,11 @@ jobs:
           yaml-file: test-yaml/testing.yaml
           query-path: .project4
           output-file: ${{ env.CONFIG_IMPORTER_4 }}
+          upload: true
 
   test-scenario-4-consumer:
     runs-on: ubuntu-latest
     needs: [ test-scenario-4-reader ]
-    env: 
-      PROJECT_NAME: ${{ needs.test-scenario-4-reader.outputs.CONFIG_IMPORTER-NAME }}
     steps:
       - uses: actions/download-artifact@v2
         with:
@@ -170,16 +169,16 @@ jobs:
       - name: Start import
         id: yml-config
         run: |
-          echo Running ...${{ env.CONFIG_IMPORTER_4 }}
-          chmod +755 ./${{ env.CONFIG_IMPORTER_4 }}
+          echo Importing ...${{ env.CONFIG_IMPORTER_4 }}
           source ./${{ env.CONFIG_IMPORTER_4 }}   
-          echo project name: $name
+
       - name: Reading from previous config reader 4
         run:  |
-          echo PROJECT_NAME: ${name}
-          echo TEST1_FLAG: ${{ steps.yml-config.outputs.name }}
-          echo TEST2_FLAG: ${TEST2_FLAG}
-          echo TEST_CMD: ${TEST_CMD}
-          echo CI_CODESCAN: ${CI_CODESCAN}
-          echo CI_BLD_CMD: ${CI_BLD_CMD}
-          echo CD_NPROD_ENV: ${CD_NPROD_ENV}
+          echo PROJECT_NAME: ${{ steps.yml-config.outputs.name }}
+          echo TEST1_FLAG: ${{ steps.yml-config.outputs.test_test1 }}
+          echo TEST2_FLAG: ${{ steps.yaml-config.outputs.test_test2 }}
+          echo TEST_CMD: ${{ steps.yaml-config.outputs.test_cmd }}
+          echo CI_CODESCAN: ${{ steps.yaml-config.outputs.ci-pipeline_codescan }}
+          echo CI_BLD_CMD: ${{ steps.yaml-config.outputs.ci-pipeline_build-cmd }}
+          echo CD_NPROD_ENV: ${{ steps.yaml-config.outputs.cd-pipeline_prod-environments }}
+

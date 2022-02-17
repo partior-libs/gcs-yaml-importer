@@ -5,8 +5,16 @@ inputs:
     description: 'Path to YAML file'
     required: true
     default: 'default-config.yaml'
+  yaml-file-for-default:  
+    description: 'Path to YAML file'
+    required: false
+    default: 'default-value-config.yaml'
   query-path:  
-    description: 'Path of config to be read'
+    description: 'YAML query path'
+    required: false
+    default: ''
+  query-path-for-default:  
+    description: 'YAML query path for default value'
     required: false
     default: ''
   output-file:  
@@ -23,11 +31,18 @@ runs:
     - name: update YQ
       run: wget https://github.com/mikefarah/yq/releases/download/v4.20.1/yq_linux_amd64.tar.gz -O - | tar xz && sudo mv yq_linux_amd64 /usr/bin/yq
       shell: bash
+    # - name: create importer for default value
+    #   run: ${{ github.action_path }}/scripts/yaml-converter.sh "${{ inputs.yaml-file-for-default }}" "${{ inputs.query-path-for-default }}" "${{ inputs.output-file }}" 
+    #   shell: bash
     - name: create importer
       run: ${{ github.action_path }}/scripts/yaml-converter.sh "${{ inputs.yaml-file }}" "${{ inputs.query-path }}" "${{ inputs.output-file }}" 
       shell: bash
     - id: importer
       run: echo "::set-output name=filename::$(echo $(${{ github.action_path }}/scripts/get-importer-filename.sh ${{ inputs.output-file }} ))"
       shell: bash
+    - uses: actions/upload-artifact@v2
+      with:
+        name: yaml-importer
+        path: $(echo $(${{ github.action_path }}/scripts/get-importer-filename.sh ${{ inputs.output-file }} ))
     - run: echo Done creating importer file...
       shell: bash

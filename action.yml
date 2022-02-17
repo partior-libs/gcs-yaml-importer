@@ -45,7 +45,7 @@ runs:
       run: echo "::set-output name=filename::$(echo $(${{ github.action_path }}/scripts/get-importer-filename.sh ${{ inputs.output-file }} ))"
       shell: bash
     - uses: actions/upload-artifact@v2
-      if: inputs.upload == true
+      if: ${{ inputs.upload }} == true
       with:
         name: ${{ steps.importer.outputs.filename }}
         path: ${{ steps.importer.outputs.filename }}

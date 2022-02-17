@@ -150,13 +150,15 @@ jobs:
       CONFIG_IMPORTER: ./${{ steps.yaml-importer-creator.outputs.importer-filename}}
     steps:
       - uses: actions/checkout@v2
-      - name: Test with query scope and custom importer filename
+      - name: Test with upload flag
         id: yaml-importer-creator
         uses: partior-libs/gcs-yaml-importer@main
         with:
           yaml-file: test-yaml/testing.yaml
           query-path: .project4
           output-file: ${{ env.CONFIG_IMPORTER_4 }}
+          yaml-file-for-default: test-yaml/testing.yaml
+          query-path-for-default: .default
           upload: true
 
   test-scenario-4-consumer:
@@ -175,10 +177,11 @@ jobs:
       - name: Reading from previous config reader 4
         run:  |
           echo PROJECT_NAME: ${{ steps.yml-config.outputs.name }}
+          echo PROJECT_NAME4: ${{ steps.yml-config.outputs.name4 }}
           echo TEST1_FLAG: ${{ steps.yml-config.outputs.test_test1 }}
-          echo TEST2_FLAG: ${{ steps.yaml-config.outputs.test_test2 }}
-          echo TEST_CMD: ${{ steps.yaml-config.outputs.test_cmd }}
-          echo CI_CODESCAN: ${{ steps.yaml-config.outputs.ci-pipeline_codescan }}
-          echo CI_BLD_CMD: ${{ steps.yaml-config.outputs.ci-pipeline_build-cmd }}
-          echo CD_NPROD_ENV: ${{ steps.yaml-config.outputs.cd-pipeline_prod-environments }}
+          echo TEST2_FLAG: ${{ steps.yml-config.outputs.test_test2 }}
+          echo TEST_CMD: ${{ steps.yml-config.outputs.test_cmd }}
+          echo CI_CODESCAN: ${{ steps.yml-config.outputs.ci-pipeline_codescan }}
+          echo CI_BLD_CMD: ${{ steps.yml-config.outputs.ci-pipeline_build-cmd }}
+          echo CD_NPROD_ENV: ${{ steps.yml-config.outputs.cd-pipeline_prod-environments }}
 

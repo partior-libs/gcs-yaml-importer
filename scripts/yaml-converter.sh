@@ -19,6 +19,7 @@ fi
 inputYaml=$(echo "$1" |xargs)
 pathFilter=$(echo "$2" |xargs)
 importerFilename=$(echo "$3" |xargs)
+containDeFaultFile=$(echo "$4" |xargs)
 
 if [[ ! -f "$inputYaml" ]]; then
   echo "[ERROR] $BASH_SOURCE (line:$LINENO): Unable to locate yaml file: $inputYaml"
@@ -30,7 +31,17 @@ if [[ "$importerFilename" == "" ]]; then
     importerFilename=$FINAL_CONVERSION_FILE
 fi
 export keyValueListFile=list.tmp
-rm -f $importerFilename
+export defaultFileFlag=false
+if [[ ! -z $containDeFaultFile ]]; then
+    if [[ -f $containDeFaultFile ]]; then
+        defaultFileFlag=true
+    fi
+fi
+## Keep importer file if contain default
+if [[ ! "$defaultFileFlag" == "true" ]]; then
+    rm -f $importerFilename
+fi
+
 rm -f $keyValueListFile
 
 function getKeys()
@@ -94,8 +105,10 @@ function getKeys()
     fi
 }
 
+
 echo [INFO] Reading $inputYaml...
 echo [INFO] Path filter: [$pathFilter]
+echo [INFO] With Default: [$pathFilter]
 
 
 getKeys "$pathFilter"
@@ -104,5 +117,4 @@ echo [INFO] Completed...
 
 if [[ -f "$importerFilename" ]]; then
     chmod 755 $importerFilename
-    ./$importerFilename
 fi

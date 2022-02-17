@@ -1,4 +1,12 @@
 ---
+default:
+  name: default-name
+  name2: default-name2
+  name3: default-name3
+  name4: default-name4
+  test:
+    test1: false
+    test2: false
 project:
   name: smc-settlement-utility-default
   name2: lala

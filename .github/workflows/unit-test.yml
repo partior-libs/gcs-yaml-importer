@@ -26,6 +26,10 @@ jobs:
       #   run:  |
       #     echo Running ...${{ steps.yaml-importer-creator.outputs.importer-filename}}
       #     ./${{ steps.yaml-importer-creator.outputs.importer-filename}}
+      - name: Test something silly
+        run:  |
+          echo What am i? ...${{ steps.yaml-importer-creator.outputs.filename}}
+
 
   test-scenario-1-consumer:
     runs-on: ubuntu-latest

@@ -43,6 +43,6 @@ runs:
     - uses: actions/upload-artifact@v2
       with:
         name: yaml-importer
-        path: $(echo $(${{ github.action_path }}/scripts/get-importer-filename.sh ${{ inputs.output-file }} ))
+        path: ${{ steps.importer.outputs.filename }}
     - run: echo Done creating importer file...
       shell: bash

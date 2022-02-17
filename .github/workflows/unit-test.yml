@@ -170,7 +170,7 @@ jobs:
       - name: Start import
         run: |
           echo Running ...${{ env.CONFIG_IMPORTER_4 }}
-          chmod +755 .${{ env.CONFIG_IMPORTER_4 }}
+          chmod +755 ./${{ env.CONFIG_IMPORTER_4 }}
           ./${{ env.CONFIG_IMPORTER_4 }}   
       - name: Reading from previous config reader 3
         run:  |

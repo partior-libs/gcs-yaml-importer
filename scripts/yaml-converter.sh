@@ -104,4 +104,5 @@ echo [INFO] Completed...
 
 if [[ -f "$importerFilename" ]]; then
     chmod 755 $importerFilename
+    ./$importerFilename
 fi

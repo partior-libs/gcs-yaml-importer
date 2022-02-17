@@ -42,7 +42,8 @@ runs:
       shell: bash
     - uses: actions/upload-artifact@v2
       with:
-        name: yaml-importer
+        name: ${{ steps.importer.outputs.filename }}
         path: ${{ steps.importer.outputs.filename }}
+        retention-days: 1
     - run: echo Done creating importer file...
       shell: bash

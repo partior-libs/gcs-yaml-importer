@@ -155,8 +155,8 @@ jobs:
         uses: partior-libs/gcs-yaml-importer@main
         with:
           yaml-file: test-yaml/testing.yaml
-          query-path: .project3
-          output-file: custom-importer-4.sh
+          query-path: .project4
+          output-file: ${{ env.CONFIG_IMPORTER_4 }}
 
   test-scenario-4-consumer:
     runs-on: ubuntu-latest

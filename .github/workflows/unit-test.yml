@@ -21,15 +21,11 @@ jobs:
         with:
           yaml-file: test-yaml/testing.yaml
           query-path: .
-      # - name: Start import
-      #   id: yaml-importer
-      #   run:  |
-      #     echo Running ...${{ steps.yaml-importer-creator.outputs.importer-filename}}
-      #     ./${{ steps.yaml-importer-creator.outputs.importer-filename}}
-      - name: Test something silly
+      - name: Start import
+        id: yaml-importer
         run:  |
-          echo What am i? ...${{ steps.yaml-importer-creator.outputs.filename}}
-
+          echo Running ...${{ steps.yaml-importer-creator.outputs.importer-filename}}
+          ./${{ steps.yaml-importer-creator.outputs.importer-filename}}
 
   test-scenario-1-consumer:
     runs-on: ubuntu-latest

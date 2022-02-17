@@ -9,16 +9,28 @@ This action will generate a executable shell script. Once the script being execu
 ```
   yaml-file:  
     description: 'Path to YAML file'
-    optional: false
+    optional: no
     default: 'default-config.yaml'
   query-path:  
     description: 'Path of config to be read'
     optional: yes
     default: '.'
+  yaml-file-for-default:  
+    description: 'Path to YAML file which contain default value'
+    optional: yes
+    default: ''
+  query-path-for-default:  
+    description: 'YAML query path for default value'
+    optional: yes
+    default: ''
   output-file:  
     description: 'Custom path of the output file'
     optional: yes
     default: 'start_import.sh'
+  upload:  
+    description: 'Flag to indicate if require to upload the importer file'
+    optional: yes
+    default: false
 ```
 
 ### Output from the action
@@ -29,10 +41,12 @@ This action will generate a executable shell script. Once the script being execu
 
 ### Sample Workflow
 ```
-name: YAML Importer
+name: Test YAML Importer
 
 on: [push, pull_request, workflow_dispatch]
 
+env:
+  CONFIG_IMPORTER_4: anyname_${{ github.run_id }}_${{ github.run_number }}
 jobs:
   test-scenario-1-reader:
     runs-on: ubuntu-latest
@@ -48,7 +62,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Test without query scope
         id: yaml-importer-creator
-        uses: partior-libs/gcs-yaml-importer@main
+        uses: partior-libs/gcs-yaml-importer@v1.1
         with:
           yaml-file: test-yaml/testing.yaml
           query-path: .
@@ -94,7 +108,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Test with query scope
         id: yaml-importer-creator
-        uses: partior-libs/gcs-yaml-importer@main
+        uses: partior-libs/gcs-yaml-importer@v1.1
         with:
           yaml-file: test-yaml/testing.yaml
           query-path: .project
@@ -140,7 +154,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Test with query scope and custom importer filename
         id: yaml-importer-creator
-        uses: partior-libs/gcs-yaml-importer@main
+        uses: partior-libs/gcs-yaml-importer@v1.1
         with:
           yaml-file: test-yaml/testing.yaml
           query-path: .project3
@@ -172,5 +186,47 @@ jobs:
           echo CI_CODESCAN: ${CI_CODESCAN}
           echo CI_BLD_CMD: ${CI_BLD_CMD}
           echo CD_NPROD_ENV: ${CD_NPROD_ENV}
+
+  test-scenario-4-reader:
+    runs-on: ubuntu-latest
+    outputs:
+      CONFIG_IMPORTER: ./${{ steps.yaml-importer-creator.outputs.importer-filename}}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Test with upload flag
+        id: yaml-importer-creator
+        uses: partior-libs/gcs-yaml-importer@v1.1
+        with:
+          yaml-file: test-yaml/testing.yaml
+          query-path: .project4
+          output-file: ${{ env.CONFIG_IMPORTER_4 }}
+          yaml-file-for-default: test-yaml/testing.yaml
+          query-path-for-default: .default
+          upload: true
+
+  test-scenario-4-consumer:
+    runs-on: ubuntu-latest
+    needs: [ test-scenario-4-reader ]
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: ${{ env.CONFIG_IMPORTER_4 }}
+      - name: Start import
+        id: yml-config
+        run: |
+          echo Importing ...${{ env.CONFIG_IMPORTER_4 }}
+          source ./${{ env.CONFIG_IMPORTER_4 }}   
+
+      - name: Reading from previous config reader 4
+        run:  |
+          echo PROJECT_NAME: ${{ steps.yml-config.outputs.name }}
+          echo PROJECT_NAME4: ${{ steps.yml-config.outputs.name4 }}
+          echo TEST1_FLAG: ${{ steps.yml-config.outputs.test_test1 }}
+          echo TEST2_FLAG: ${{ steps.yml-config.outputs.test_test2 }}
+          echo TEST_CMD: ${{ steps.yml-config.outputs.test_cmd }}
+          echo CI_CODESCAN: ${{ steps.yml-config.outputs.ci-pipeline_codescan }}
+          echo CI_BLD_CMD: ${{ steps.yml-config.outputs.ci-pipeline_build-cmd }}
+          echo CD_NPROD_ENV: ${{ steps.yml-config.outputs.cd-pipeline_prod-environments }}
+
 ```
 

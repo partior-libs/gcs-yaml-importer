@@ -4,192 +4,97 @@ default:
   name2: default-name2
   name3: default-name3
   name4: default-name4
+  branches:
+    default:
+      feature1: default-branches1-default-feature1
+      feature2: default-branches1-default-feature2
+    develop:
+      feature1: default-branches1-develop-feature1
+    feature:
+      feature1: default-branches1-feature-feature1
+  branches2:
+    default:
+      feature1: default-branches2-default-feature1
+      feature2: default-branches2-default-feature2
+    develop:
+      feature1: default-branches2-develop-feature1
+    feature:
+      feature1: default-branches2-feature-feature1
   test:
-    test1: false
-    test2: false
-project:
-  name: smc-settlement-utility-default
-  name2: lala
-  name3: lala
-  test:
-    test1: true
-    test2: false
-    cmd:
-      - echo 123
-      - echo 234
+    test1: default-test-test1
+    test2: default-test-test2
+    cmd: default-test-cmd
   ci-pipeline:
-    codescan: true
+    codescan: default-cipipeline-codescan
     build-cmd: |
-      echo 123
-      echo 456
-    packager: true
+      echo default-cipipeline-buildcmd-123
+      echo default-cipipeline-buildcmd-456
+    packager: default-cipipeline-packager
   cd-pipeline:
     nprod-environments:
-      - dev02
-      - uat
+      - default-cdpipeline-nprod-1
+      - default-cdpipeline-nprod-2
     prod-environments:
-      - dev02
-      - uat  
+      - default-cdpipeline-prod-1
+      - default-cdpipeline-prod-1 
+  dummy: default-dummy
 project1:
-  name: smc-settlement-utility-1
-  name2: lala2
-  name3: lala2
+  name: project1-name
+  name2: project1-name2
+  name3: project1-name3
+  name4: project1-name4
+  branches:
+    develop:
+      feature1: project1-branches1-develop-feature1
+  branches2:
+    default:
+      feature1: project1-branches2-default-feature1
+      feature2: project1-branches2-default-feature2
+    feature:
+      feature1: project1-branches2-feature-feature1
   test:
-    test1: true
-    test2: false
-    cmd:
-      - echo 123
-      - echo 234
+    test1: project1-test-test1
+    test2: project1-test-test2
+    cmd: project1-test-cmd
   ci-pipeline:
-    codescan: true
-    build-cmd:
-      echo 123
-      echo 456
-    packager: true
+    codescan: project1-cipipeline-codescan
+    build-cmd: |
+      echo project1-cipipeline-buildcmd-123
+      echo project1-cipipeline-buildcmd-456
+    packager: project1-cipipeline-packager
   cd-pipeline:
     nprod-environments:
-      - dev02
-      - uat
+      - project1-cdpipeline-nprod-1
+      - project1-cdpipeline-nprod-2
     prod-environments:
-      - dev02
-      - uat  
+      - project1-cdpipeline-prod-1
+      - project1-cdpipeline-prod-1 
+  dummy: project1-dummy
 project2:
-  name: smc-settlement-utility-2
-  name2: lala
-  name3: lala
+  name: project2-name
+  name2: project2-name2
+  name3: project2-name3
+  name4: project2-name4
+  branches:
+    default:
+      feature1: project2-branches1-default-feature1
+      feature2: project2-branches1-default-feature2
+  branches2:
+    feature:
+      feature1: project2-branches2-feature-feature1
   test:
-    test1: true
-    test2: false
-    cmd:
-      - echo 123
-      - echo 234
+    test1: project2-test-test1
   ci-pipeline:
-    codescan: true
+    codescan: project2-cipipeline-codescan
     build-cmd: |
-      echo 123
-      echo 456
-    packager: true
+      echo project2-cipipeline-buildcmd-123
+      echo project2-cipipeline-buildcmd-456
+    packager: project2-cipipeline-packager
   cd-pipeline:
     nprod-environments:
-      - dev02
-      - uat
+      - project2-cdpipeline-nprod-1
+      - project2-cdpipeline-nprod-2
     prod-environments:
-      - dev02
-      - uat  
-project3:
-  name: smc-settlement-utility-3
-  name2: lala
-  name3: lala
-  test:
-    test1: true
-    test2: false
-    cmd:
-      - echo 123
-      - echo 234
-  ci-pipeline:
-    codescan: true
-    build-cmd: |
-      echo 123
-      echo 456
-    packager: true
-  cd-pipeline:
-    nprod-environments:
-      - dev02
-      - uat
-    prod-environments:
-      - dev02
-      - uat  
-project4:
-  name: smc-settlement-utility-4
-  name2: lala
-  name3: lala
-  test:
-    test1: true
-    test2: false
-    cmd:
-      - echo 123
-      - echo 234
-  ci-pipeline:
-    codescan: true
-    build-cmd: |
-      echo 123
-      echo 456
-    packager: true
-  cd-pipeline:
-    nprod-environments:
-      - dev02
-      - uat
-    prod-environments:
-      - dev02
-      - uat  
-project5:
-  name: smc-settlement-utility-5
-  name2: lala
-  name3: lala
-  test:
-    test1: true
-    test2: false
-    cmd:
-      - echo 123
-      - echo 234
-  ci-pipeline:
-    codescan: true
-    build-cmd: |
-      echo 123
-      echo 456
-    packager: true
-  cd-pipeline:
-    nprod-environments:
-      - dev02
-      - uat
-    prod-environments:
-      - dev02
-      - uat  
-project6:
-  name: smc-settlement-utility-6
-  name2: lala
-  name3: lala
-  test:
-    test1: true
-    test2: false
-    cmd:
-      - echo 123
-      - echo 234
-  ci-pipeline:
-    codescan: true
-    build-cmd: |
-      echo 123
-      echo 456
-    packager: true
-  cd-pipeline:
-    nprod-environments:
-      - dev02
-      - uat
-    prod-environments:
-      - dev02
-      - uat  
-project7:
-  name: smc-settlement-utility-7
-  name2: lala
-  name3: lala
-  test:
-    test1: true
-    test2: false
-    cmd:
-      - echo 123
-      - echo 234
-  ci-pipeline:
-    codescan: true
-    build-cmd: |
-      echo 123
-      echo 456
-    packager: true
-  cd-pipeline:
-    nprod-environments:
-      - dev02
-      - uat
-    prod-environments:
-      - dev02
-      - uat  
-    
-
+      - project2-cdpipeline-prod-1
+      - project2-cdpipeline-prod-1 
+  dummy: project2-dummy

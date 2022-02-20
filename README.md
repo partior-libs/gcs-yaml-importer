@@ -23,6 +23,14 @@ This action will generate a executable shell script. Once the script being execu
     description: 'YAML query path for default value'
     optional: yes
     default: ''
+  set-sub-default-keys:  
+    description: 'Comma delimited sub default keys'
+    optional: yes
+    default: ''
+  set-sub-default-keys-for-default:  
+    description: 'Comma delimited sub default keys on default value file'
+    optional: yes
+    default: ''
   output-file:  
     description: 'Custom path of the output file'
     optional: yes

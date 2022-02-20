@@ -68,7 +68,7 @@ jobs:
         uses: partior-libs/gcs-yaml-importer@main
         with:
           yaml-file: test-yaml/testing.yaml
-          query-path: .project
+          query-path: .project1
       - name: Start import
         id: yaml-importer
         run:  |
@@ -114,7 +114,7 @@ jobs:
         uses: partior-libs/gcs-yaml-importer@main
         with:
           yaml-file: test-yaml/testing.yaml
-          query-path: .project3
+          query-path: .project1
           output-file: custom-importer.sh
       - name: Start import
         id: yaml-importer
@@ -155,10 +155,12 @@ jobs:
         uses: partior-libs/gcs-yaml-importer@main
         with:
           yaml-file: test-yaml/testing.yaml
-          query-path: .project4
+          query-path: .project1
           output-file: ${{ env.CONFIG_IMPORTER_4 }}
           yaml-file-for-default: test-yaml/testing.yaml
           query-path-for-default: .default
+          set-sub-default-keys: .project1.branches2.default
+          set-sub-default-keys-for-default: .default.branches.default
           upload: true
 
   test-scenario-4-consumer:
@@ -178,6 +180,16 @@ jobs:
         run:  |
           echo PROJECT_NAME: ${{ steps.yml-config.outputs.name }}
           echo PROJECT_NAME4: ${{ steps.yml-config.outputs.name4 }}
+          echo BRANCHES_DEVELOP_FEATURE1: ${{ steps.yml-config.outputs.branches_develop_feature1 }}
+          echo BRANCHES_DEVELOP_FEATURE2: ${{ steps.yml-config.outputs.branches_develop_feature2 }}
+          echo BRANCHES_FEATURE_FEATURE1: ${{ steps.yml-config.outputs.branches_feature_feature1 }}
+          echo BRANCHES_FEATURE_FEATURE2: ${{ steps.yml-config.outputs.branches_feature_feature2 }}
+          echo BRANCHES2_DEVELOP_FEATURE1: ${{ steps.yml-config.outputs.branches_develop_feature1 }}
+          echo BRANCHES2_DEVELOP_FEATURE2: ${{ steps.yml-config.outputs.branches_develop_feature2 }}
+          echo BRANCHES2_FEATURE_FEATURE1: ${{ steps.yml-config.outputs.branches_feature_feature1 }}
+          echo BRANCHES2_FEATURE_FEATURE2: ${{ steps.yml-config.outputs.branches_feature_feature2 }}
+          echo CD_NPROD_ENV: ${{ steps.yml-config.outputs.cd-pipeline_prod-environments }}
+          echo CD_NPROD_ENV: ${{ steps.yml-config.outputs.cd-pipeline_prod-environments }}
           echo TEST1_FLAG: ${{ steps.yml-config.outputs.test_test1 }}
           echo TEST2_FLAG: ${{ steps.yml-config.outputs.test_test2 }}
           echo TEST_CMD: ${{ steps.yml-config.outputs.test_cmd }}

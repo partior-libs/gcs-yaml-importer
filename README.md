@@ -70,7 +70,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Test without query scope
         id: yaml-importer-creator
-        uses: partior-libs/gcs-yaml-importer@v1.1
+        uses: partior-libs/gcs-yaml-importer@partior-stable
         with:
           yaml-file: test-yaml/testing.yaml
           query-path: .
@@ -116,7 +116,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Test with query scope
         id: yaml-importer-creator
-        uses: partior-libs/gcs-yaml-importer@v1.1
+        uses: partior-libs/gcs-yaml-importer@partior-stable
         with:
           yaml-file: test-yaml/testing.yaml
           query-path: .project
@@ -162,7 +162,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Test with query scope and custom importer filename
         id: yaml-importer-creator
-        uses: partior-libs/gcs-yaml-importer@v1.1
+        uses: partior-libs/gcs-yaml-importer@partior-stable
         with:
           yaml-file: test-yaml/testing.yaml
           query-path: .project3
@@ -203,7 +203,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Test with upload flag
         id: yaml-importer-creator
-        uses: partior-libs/gcs-yaml-importer@v1.1
+        uses: partior-libs/gcs-yaml-importer@partior-stable
         with:
           yaml-file: test-yaml/testing.yaml
           query-path: .project4

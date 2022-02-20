@@ -182,10 +182,10 @@ jobs:
           echo BRANCHES_DEVELOP_FEATURE2: ${{ steps.yml-config.outputs.branches_develop_feature2 }}
           echo BRANCHES_FEATURE_FEATURE1: ${{ steps.yml-config.outputs.branches_feature_feature1 }}
           echo BRANCHES_FEATURE_FEATURE2: ${{ steps.yml-config.outputs.branches_feature_feature2 }}
-          echo BRANCHES2_DEVELOP_FEATURE1: ${{ steps.yml-config.outputs.branches_develop_feature1 }}
-          echo BRANCHES2_DEVELOP_FEATURE2: ${{ steps.yml-config.outputs.branches_develop_feature2 }}
-          echo BRANCHES2_FEATURE_FEATURE1: ${{ steps.yml-config.outputs.branches_feature_feature1 }}
-          echo BRANCHES2_FEATURE_FEATURE2: ${{ steps.yml-config.outputs.branches_feature_feature2 }}
+          echo BRANCHES2_DEVELOP_FEATURE1: ${{ steps.yml-config.outputs.branches2_develop_feature1 }}
+          echo BRANCHES2_DEVELOP_FEATURE2: ${{ steps.yml-config.outputs.branches2_develop_feature2 }}
+          echo BRANCHES2_FEATURE_FEATURE1: ${{ steps.yml-config.outputs.branches2_feature_feature1 }}
+          echo BRANCHES2_FEATURE_FEATURE2: ${{ steps.yml-config.outputs.branches2_feature_feature2 }}
           echo CD_NPROD_ENV: ${{ steps.yml-config.outputs.cd-pipeline_prod-environments }}
           echo CD_NPROD_ENV: ${{ steps.yml-config.outputs.cd-pipeline_prod-environments }}
           echo TEST1_FLAG: ${{ steps.yml-config.outputs.test_test1 }}

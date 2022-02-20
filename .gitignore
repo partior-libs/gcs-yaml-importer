@@ -1,2 +1,4 @@
 list.tmp
 start_import.sh
+*.kv-tmp
+*.tmp

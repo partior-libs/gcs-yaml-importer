@@ -50,6 +50,8 @@ project1:
     default:
       feature1: project1-branches2-default-feature1
       feature2: project1-branches2-default-feature2
+    develop:
+      feature3: project1-branches2-feature-feature3
     feature:
       feature1: project1-branches2-feature-feature1
   test:

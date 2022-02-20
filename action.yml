@@ -48,7 +48,7 @@ runs:
       shell: bash
     - name: create importer for default value
       if: inputs.yaml-file-for-default != ''
-      run: ${{ github.action_path }}/scripts/yaml-converter.sh "${{ inputs.yaml-file-for-default }}" "${{ inputs.query-path-for-default-for-default }}" "${{ inputs.output-file }}" "${{ inputs.set-sub-default-keys }}"
+      run: ${{ github.action_path }}/scripts/yaml-converter.sh "${{ inputs.yaml-file-for-default }}" "${{ inputs.query-path-for-default }}" "${{ inputs.output-file }}" "${{ inputs.set-sub-default-keys-for-default }}"
       shell: bash
     - name: create importer
       run: ${{ github.action_path }}/scripts/yaml-converter.sh "${{ inputs.yaml-file }}" "${{ inputs.query-path }}" "${{ inputs.output-file }}" "${{ inputs.set-sub-default-keys }}"

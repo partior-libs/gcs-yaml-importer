@@ -146,8 +146,6 @@ jobs:
 
   test-scenario-4-reader:
     runs-on: ubuntu-latest
-    outputs:
-      CONFIG_IMPORTER: ./${{ steps.yaml-importer-creator.outputs.importer-filename}}
     steps:
       - uses: actions/checkout@v2
       - name: Test with upload flag

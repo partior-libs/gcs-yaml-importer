@@ -87,7 +87,8 @@ function getKeys()
                 else
                     currentValueWithList="$currentValueWithList ]"
                     tmpCurrentKey=${currentParentKey//\./\_}
-                    echo "echo ::set-output name=$tmpCurrentKey::\"$currentValueWithList\"" >> $outputimporterFilename
+                    # echo "echo ::set-output name=$tmpCurrentKey::\"$currentValueWithList\"" >> $outputimporterFilename
+                    storeForGitHubEnv "$tmpCurrentKey" "$currentValueWithList" "$outputimporterFilename"
                     currentValueWithList="["
                     prevKeyWithList="NIL_KEY"
                 fi
@@ -96,17 +97,20 @@ function getKeys()
                 if [[ "$prevKeyWithList" != "NIL_KEY" ]]; then
                     currentValueWithList="$currentValueWithList ]"
                     tmpCurrentKey=${prevKeyWithList//\./\_}
-                    echo "echo ::set-output name=$tmpCurrentKey::\"$currentValueWithList\"" >> $outputimporterFilename
+                    # echo "echo ::set-output name=$tmpCurrentKey::\"$currentValueWithList\"" >> $outputimporterFilename
+                    storeForGitHubEnv "$tmpCurrentKey" "$currentValueWithList" "$outputimporterFilename"
                     currentValueWithList="["
                     prevKeyWithList="NIL_KEY"
                 fi
             fi
             currentKey=${currentKey//\./\_}
-            echo "echo ::set-output name=$currentKey::\"$currentValue\"" >> $outputimporterFilename
+            # echo "echo ::set-output name=$currentKey::\"$currentValue\"" >> $outputimporterFilename
+            storeForGitHubEnv "$currentKey" "$currentValue" "$outputimporterFilename"
             if [[ "$element" == "${keyValueList[-1]}" ]] && [[ ! "$currentValueWithList" == "[" ]] ; then
                 currentValueWithList="$currentValueWithList ]"
                 tmpCurrentKey=${prevKeyWithList//\./\_}
-                echo "echo ::set-output name=$tmpCurrentKey::\"$currentValueWithList\"" >> $outputimporterFilename
+                # echo "echo ::set-output name=$tmpCurrentKey::\"$currentValueWithList\"" >> $outputimporterFilename
+                storeForGitHubEnv "$tmpCurrentKey" "$currentValueWithList" "$outputimporterFilename"
                 currentValueWithList="["
                 prevKeyWithList="NIL_KEY"
             fi
@@ -119,6 +123,18 @@ function getKeys()
     rm -f $keyValueListFile
 }
 
+## Store format based on the character in the value
+function storeForGitHubEnv() {
+    local storeKey=$1
+    local storeValue=$2
+    local storeFile=$3
+
+    if [[ "$storeValue" =~ [\|\>] ]]; then
+        echo "echo ::set-output name=$storeKey::\"$storeValue\"" >> $storeFile
+    else
+        echo "echo ::set-output name=$storeKey::$storeValue" >> $storeFile
+    fi
+}
 
 echo [INFO] Reading $inputYaml...
 echo [INFO] Path filter: [$pathFilter]
@@ -166,7 +182,8 @@ if [[ -f $SUB_DEFAULT_KEY_LIST_FILE ]]; then
                         do
                             subChildKey=$(echo $eachChildPath | cut -d"=" -f1)
                             subChildValue=$(echo $eachChildPath | cut -d"=" -f1 --complement)
-                            echo  "echo ::set-output name=${finalSubDefaultKey}_${subChildKey}::\"${subChildValue}\"" >> $importerFilename
+                            # echo  "echo ::set-output name=${finalSubDefaultKey}_${subChildKey}::\"${subChildValue}\"" >> $importerFilename
+                            storeForGitHubEnv "${finalSubDefaultKey}_${subChildKey}" "${subChildValue}" "$importerFilename"
                         done < $eachSubPath.kv-tmp
                     fi
                 fi

@@ -87,7 +87,7 @@ function getKeys()
                 else
                     currentValueWithList="$currentValueWithList ]"
                     tmpCurrentKey=${currentParentKey//\./\_}
-                    echo "echo ::set-output name=$tmpCurrentKey::'$currentValueWithList'" >> $outputimporterFilename
+                    echo "echo ::set-output name=$tmpCurrentKey::\"$currentValueWithList\"" >> $outputimporterFilename
                     currentValueWithList="["
                     prevKeyWithList="NIL_KEY"
                 fi
@@ -96,17 +96,17 @@ function getKeys()
                 if [[ "$prevKeyWithList" != "NIL_KEY" ]]; then
                     currentValueWithList="$currentValueWithList ]"
                     tmpCurrentKey=${prevKeyWithList//\./\_}
-                    echo "echo ::set-output name=$tmpCurrentKey::'$currentValueWithList'" >> $outputimporterFilename
+                    echo "echo ::set-output name=$tmpCurrentKey::\"$currentValueWithList\"" >> $outputimporterFilename
                     currentValueWithList="["
                     prevKeyWithList="NIL_KEY"
                 fi
             fi
             currentKey=${currentKey//\./\_}
-            echo "echo ::set-output name=$currentKey::'$currentValue'" >> $outputimporterFilename
+            echo "echo ::set-output name=$currentKey::\"$currentValue\"" >> $outputimporterFilename
             if [[ "$element" == "${keyValueList[-1]}" ]] && [[ ! "$currentValueWithList" == "[" ]] ; then
                 currentValueWithList="$currentValueWithList ]"
                 tmpCurrentKey=${prevKeyWithList//\./\_}
-                echo "echo ::set-output name=$tmpCurrentKey::'$currentValueWithList'" >> $outputimporterFilename
+                echo "echo ::set-output name=$tmpCurrentKey::\"$currentValueWithList\"" >> $outputimporterFilename
                 currentValueWithList="["
                 prevKeyWithList="NIL_KEY"
             fi
@@ -166,7 +166,7 @@ if [[ -f $SUB_DEFAULT_KEY_LIST_FILE ]]; then
                         do
                             subChildKey=$(echo $eachChildPath | cut -d"=" -f1)
                             subChildValue=$(echo $eachChildPath | cut -d"=" -f1 --complement)
-                            echo  "echo ::set-output name=${finalSubDefaultKey}_${subChildKey}::'${subChildValue}'" >> $importerFilename
+                            echo  "echo ::set-output name=${finalSubDefaultKey}_${subChildKey}::\"${subChildValue}\"" >> $importerFilename
                         done < $eachSubPath.kv-tmp
                     fi
                 fi

@@ -131,8 +131,10 @@ function storeForGitHubEnv() {
 
     if [[ "$storeValue" =~ [\|\>\<\&\\] ]]; then
         echo "echo ::set-output name=$storeKey::\"$storeValue\"" >> $storeFile
+        echo "echo $storeKey=\"$storeValue\" >> \$GITHUB_ENV" >> $storeFile
     else
         echo "echo ::set-output name=$storeKey::$storeValue" >> $storeFile
+        echo "echo $storeKey=$storeValue >> \$GITHUB_ENV" >> $storeFile
     fi
 }
 

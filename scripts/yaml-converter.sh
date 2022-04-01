@@ -129,7 +129,7 @@ function storeForGitHubEnv() {
     local storeValue=$2
     local storeFile=$3
 
-    if [[ "$storeValue" =~ [\|\>] ]]; then
+    if [[ "$storeValue" =~ [\|\>\<\&] ]]; then
         echo "echo ::set-output name=$storeKey::\"$storeValue\"" >> $storeFile
     else
         echo "echo ::set-output name=$storeKey::$storeValue" >> $storeFile

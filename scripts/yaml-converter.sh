@@ -128,13 +128,17 @@ function storeForGitHubEnv() {
     local storeKey=$1
     local storeValue=$2
     local storeFile=$3
-
+    local tmpStoreKey=""
     if [[ "$storeValue" =~ [\|\>\<\&\\] ]]; then
         echo "echo ::set-output name=$storeKey::\"$storeValue\"" >> $storeFile
-        echo "echo $storeKey=\"$storeValue\" >> \$GITHUB_ENV" >> $storeFile
+        ## Must normalized to underscore before pushing into github_env
+        tmpStoreKey=$(echo $storeKey | sed "s/_/__/g" | sed "s/-/_/g")
+        echo "echo $tmpStoreKey=\"$storeValue\" >> \$GITHUB_ENV" >> $storeFile
     else
         echo "echo ::set-output name=$storeKey::$storeValue" >> $storeFile
-        echo "echo $storeKey=$storeValue >> \$GITHUB_ENV" >> $storeFile
+        ## Must normalized to underscore before pushing into github_env
+        tmpStoreKey=$(echo $storeKey | sed "s/_/__/g" | sed "s/-/_/g")
+        echo "echo $tmpStoreKey=$storeValue >> \$GITHUB_ENV" >> $storeFile
     fi
 }
 

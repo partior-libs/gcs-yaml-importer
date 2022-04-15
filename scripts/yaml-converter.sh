@@ -20,6 +20,7 @@ inputYaml=$(echo "$1" |xargs)
 pathFilter=$(echo "$2" |xargs)
 importerFilename=$(echo "$3" |xargs)
 subPathFilterList=$(echo "$4" | xargs | sed 's/ //g')
+skipIfNotFound=$(if [[ -z "$5" ]]; then echo false;else echo true;fi)
 
 if [[ ! -f "$inputYaml" ]]; then
   echo "[ERROR] $BASH_SOURCE (line:$LINENO): Unable to locate yaml file: $inputYaml"
@@ -116,9 +117,20 @@ function getKeys()
             fi
         done
     else
-        echo "[ERROR] $BASH_SOURCE (line:$LINENO): Failed querying path: $currentKey"
-        rm -f $keyValueListFile
-        exit 1
+        if ("${skipIfNotFound}"); then
+            echo "[WARNING] $BASH_SOURCE (line:$LINENO): Failed querying path: $currentKey"
+            if [[ ! -f "$outputimporterFilename" ]]; then
+                echo "[ERROR] $BASH_SOURCE (line:$LINENO): Importer file [$outputimporterFilename] not present. At least one yaml file or query path must be valid. Check yaml and query path for invalid parameters"
+            else
+                echo "[INFO] Skipping.. importer file present: $outputimporterFilename"
+                exit 0
+            fi
+
+        else
+            echo "[ERROR] $BASH_SOURCE (line:$LINENO): Failed querying path: $currentKey"
+            rm -f $keyValueListFile
+            exit 1
+        fi
     fi
     rm -f $keyValueListFile
 }

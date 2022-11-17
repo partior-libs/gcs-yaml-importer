@@ -216,7 +216,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ test-scenario-4-reader ]
     steps:
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: ${{ env.CONFIG_IMPORTER_4 }}
       - name: Start import

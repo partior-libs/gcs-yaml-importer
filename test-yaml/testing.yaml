@@ -56,7 +56,7 @@ project1:
       feature1: project1-branches2-feature-feature1
   test:
     test1: project1-test-test1
-    test2: project1-test-test2
+    test2: project1-test-test2  with space
     cmd: project1-test-cmd
   ci-pipeline:
     codescan: project1-cipipeline-codescan
@@ -85,7 +85,7 @@ project2:
     feature:
       feature1: project2-branches2-feature-feature1
   test:
-    test1: project2-test-test1
+    test1: project2-test-test1 with space
   ci-pipeline:
     codescan: project2-cipipeline-codescan
     build-cmd: |

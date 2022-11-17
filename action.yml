@@ -41,7 +41,7 @@ runs:
   using: "composite"
   steps:
     - name: clean cache files
-      run: echo "::set-output name=filename::$(echo $(${{ github.action_path }}/scripts/clean-files.sh ${{ inputs.output-file }} ))"
+      run: echo "filename=$(echo $(${{ github.action_path }}/scripts/clean-files.sh ${{ inputs.output-file }} ))" >> $GITHUB_OUTPUT
       shell: bash
     - name: create importer for default value
       if: inputs.yaml-file-for-default != ''
@@ -51,7 +51,7 @@ runs:
       run: ${{ github.action_path }}/scripts/yaml-converter.sh "${{ inputs.yaml-file }}" "${{ inputs.query-path }}" "${{ inputs.output-file }}" "${{ inputs.set-sub-default-keys }}" "${{ inputs.yaml-file-for-default }}"
       shell: bash
     - id: importer
-      run: echo "::set-output name=filename::$(echo $(${{ github.action_path }}/scripts/get-importer-filename.sh ${{ inputs.output-file }} ))"
+      run: echo "filename=$(echo $(${{ github.action_path }}/scripts/get-importer-filename.sh ${{ inputs.output-file }} ))" >> $GITHUB_OUTPUT
       shell: bash
     - uses: actions/upload-artifact@v2
       if: inputs.upload == 'true'

@@ -67,7 +67,7 @@ jobs:
       CI-BLD-CMD: ${{ steps.yaml-importer.outputs.project2_ci-pipeline_build-cmd }}
       CD-NPROD-ENV: ${{ steps.yaml-importer.outputs.project2_cd-pipeline_prod-environments }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Test without query scope
         id: yaml-importer-creator
         uses: partior-libs/gcs-yaml-importer@partior-stable
@@ -113,7 +113,7 @@ jobs:
       CI-BLD-CMD: ${{ steps.yaml-importer.outputs.ci-pipeline_build-cmd }}
       CD-NPROD-ENV: ${{ steps.yaml-importer.outputs.cd-pipeline_prod-environments }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Test with query scope
         id: yaml-importer-creator
         uses: partior-libs/gcs-yaml-importer@partior-stable
@@ -159,7 +159,7 @@ jobs:
       CI-BLD-CMD: ${{ steps.yaml-importer.outputs.ci-pipeline_build-cmd }}
       CD-NPROD-ENV: ${{ steps.yaml-importer.outputs.cd-pipeline_prod-environments }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Test with query scope and custom importer filename
         id: yaml-importer-creator
         uses: partior-libs/gcs-yaml-importer@partior-stable
@@ -200,7 +200,7 @@ jobs:
     outputs:
       CONFIG_IMPORTER: ./${{ steps.yaml-importer-creator.outputs.importer-filename}}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Test with upload flag
         id: yaml-importer-creator
         uses: partior-libs/gcs-yaml-importer@partior-stable

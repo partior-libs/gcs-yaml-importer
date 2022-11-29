@@ -240,7 +240,8 @@ fi
 # rm -f $keyValueListFile
 getKeys "$pathFilter" "$importerFilename" "false"
 
-
+## Escape special chars
+sed -i "s/\\\\\\\\\\$/\\\\$/g" "$importerFilename"
 
 echo [INFO] Completed...
 

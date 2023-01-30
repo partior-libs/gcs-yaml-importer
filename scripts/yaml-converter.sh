@@ -56,7 +56,7 @@ function getKeys()
     fi
 
     if (cat $inputYaml | yq -e "$currentKey" -o props 2>/dev/null >/dev/null); then
-        cat $inputYaml | yq -o props "$currentKey" | sed "s/ = /=/g" > $keyValueListFile
+        cat $inputYaml | yq -o props "$currentKey" | grep -v '^$' | grep -v '^#' | sed "s/ = /=/g" > $keyValueListFile
         if [[ "$createIsolateKVFile" == "true" ]]; then
             isolateKVFile=$(echo $currentKey | sed "s/^$pathFilter\.//g")
             cat $keyValueListFile >> $isolateKVFile.kv-tmp

@@ -86,6 +86,8 @@ smc:
 
     branches:
       default:
+        sample-list:
+          - name: global-branch-default
         node-version: global-branch-default
         prepare-release:
           enabled: global-branch-default
@@ -149,6 +151,57 @@ smc:
                 target-envs:
                   - global-branch-default
                   - global-branch-default2
+        artifacts:
+          ## Yaml config stored in deploy-smc. Below info must first be read by action "partior-libs/gcs-pipe-utils/actions/generic-init-std-promotion-variables@partior-stable"
+          yaml-config:
+            - file: global-branch-default1
+              version-path: global-branch-default1
+              artifact-base-name: global-branch-default1
+              artifact-group: global-branch-default1
+              artifactory-src-repo: global-branch-default1
+              artifactory-promotion-repo: global-branch-default1
+              artifact-type: global-branch-default1
+              store-version:
+                enabled: global-branch-default1
+                git:
+                  enabled: global-branch-default1
+                  repo: global-branch-default1
+                  yaml-store-path-key: global-branch-default1
+                  # Placeholder "@@ENV_NAME@@" will be replaced during iteration of list items in "store-version.git.target-envs"
+                  target-env-file: global-branch-default1
+                  target-envs:
+                    - global-branch-default1
+            - file: global-branch-default2
+              version-path: global-branch-default2
+              artifact-base-name: global-branch-default2
+              artifact-group: global-branch-default2
+              artifactory-src-repo: global-branch-default2
+              artifactory-promotion-repo: global-branch-default2
+              artifact-type: global-branch-default2
+              store-version:
+                enabled: global-branch-default2
+                git:
+                  enabled: global-branch-default2
+                  repo: global-branch-default2
+                  yaml-store-path-key: global-branch-default2
+                  # Placeholder "@@ENV_NAME@@" will be replaced during iteration of list items in "store-version.git.target-envs"
+                  target-env-file: global-branch-default2
+                  target-envs:
+                    - global-branch-default2
+        pre-deployment:
+          runner: ubuntu-latest
+          inside-deployment-job: true
+          cmd:
+            - echo Reserved pre-deployment 1
+            - echo Reserved pre-deployment 2
+            - echo Reserved pre-deployment 3
+            - echo Reserved pre-deployment 4
+            - echo Reserved pre-deployment 5
+            - echo Reserved pre-deployment 6
+            - echo Reserved pre-deployment 7
+            - echo Reserved pre-deployment 8
+            - echo Reserved pre-deployment 9
+            - echo Reserved pre-deployment 10
 
   cd:
     promotion:

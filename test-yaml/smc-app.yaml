@@ -75,6 +75,12 @@ smc:
           contracts-path: project-branch-default
           update-pr:
             enabled: project-branch-default
+        pre-deployment:
+          runner: ubuntu-latest
+          inside-deployment-job: true
+          cmd:
+            - project-branch-default 1
+            - project-branch-default 2
       feature:
         # compile:
         #   java-wrapper:
@@ -88,6 +94,26 @@ smc:
           enabled: true
           mode: quick
           remap-import: "@openzeppelin/=$(pwd)/lib/smc-diamond/lib/openzeppelin/"
+        artifacts:
+          ## Yaml config stored in deploy-smc. Below info must first be read by action "partior-libs/gcs-pipe-utils/actions/generic-init-std-promotion-variables@partior-stable"
+          yaml-config:
+            - file: app-value
+              version-path: app-value
+              artifact-base-name: app-value
+              artifact-group: app-value
+              artifactory-src-repo: app-value
+              artifactory-promotion-repo: app-value
+              artifact-type: app-value
+              store-version:
+                enabled: app-value
+                git:
+                  enabled: app-value
+                  repo: app-value
+                  yaml-store-path-key: app-value
+                  # Placeholder "@@ENV_NAME@@" will be replaced during iteration of list items in "store-version.git.target-envs"
+                  target-env-file: app-value
+                  target-envs:
+                    - app-value
       develop:
         compile:
           java-wrapper:
@@ -144,6 +170,7 @@ smc:
           enabled: true
           mode: standard
           remap-import: "@openzeppelin/=$(pwd)/lib/smc-diamond/lib/openzeppelin/"
+          
             
   cd:
     promotion:

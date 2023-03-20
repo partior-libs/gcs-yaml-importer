@@ -1,0 +1,274 @@
+---
+smc:
+  ci:
+    artifact-base-name: settlement-utility
+    mythx-project-id: c1824923-73d4-4004-8901-96667a5a0e22
+    artifact-auto-versioning:
+      enabled: true
+    branches:
+      default:
+        node-version: project-branch-default
+        prepare-release:
+          enabled: project-branch-default
+        compile:
+          java-wrapper:
+            enabled: project-branch-default
+            pom-file: project-branch-default
+          install-foundry:
+            enabled: project-branch-default
+          truffle-compile:
+            enabled: project-branch-default
+          solc-compile:
+            enabled: project-branch-default
+          script-compile:
+            enabled: project-branch-default
+            script-file: project-branch-default 
+        gitleaks:
+          enabled: project-branch-default
+          scan-depth: project-branch-default
+        codacy:
+          upload-coverage:
+            enabled: project-branch-default
+            coverage-file: project-branch-default
+          spotbugs:
+            enabled: project-branch-default
+        unit-test:
+          enabled: project-branch-default
+          coverage:
+            enabled: project-branch-default
+          ganache:
+            enabled: project-branch-default
+        # s3-code-push:
+        #   enabled: false
+        artifact:
+          maven-packager:
+            enabled: project-branch-default
+            jfrog-config-id: project-branch-default
+            ## Target repo for jar upload
+            artifactory-repo: project-branch-default
+            ## Resolving artifacts from following repos
+            artifactory-dev-repo: project-branch-default
+            artifactory-release-repo: project-branch-default
+          packager:
+            enabled: project-branch-default
+            group: project-branch-default
+            artifactory-username: project-branch-default
+            artifactory-repo: project-branch-default
+            artifactory-dev-repo: project-branch-default
+            artifactory-release-repo: project-branch-default
+            folder-list: project-branch-default
+            file-list: project-branch-default
+            store-version:
+              enabled: project-branch-default
+              git:
+                enabled: project-branch-default
+                repo: project-branch-default
+                branch: project-branch-default
+                yaml-store-path-key: project-branch-default
+                # Placeholder "@@ENV_NAME@@" will be replaced during iteration of list items in "store-version.git.target-envs"
+                target-env-file: project-branch-default
+                target-envs:
+                  - project-branch-default
+                  - project-branch-default2
+
+        deployment:
+          enabled: project-branch-default
+          repo: project-branch-default
+          target-env: project-branch-default
+          ## type: initial | upgrade
+          type: project-branch-default
+        mythx:
+          enabled: project-branch-default
+          ## mode: quick|standard|deep
+          mode: project-branch-default
+          remap-import: project-branch-default
+          contracts-path: project-branch-default
+          update-pr:
+            enabled: project-branch-default
+      feature:
+        # compile:
+        #   java-wrapper:
+        #     enabled: true
+        artifact:
+          maven-packager:
+            enabled: true
+          packager:
+            enabled: true
+        mythx:
+          enabled: true
+          mode: quick
+          remap-import: "@openzeppelin/=$(pwd)/lib/smc-diamond/lib/openzeppelin/"
+      develop:
+        compile:
+          java-wrapper:
+            enabled: true
+        artifact:
+          maven-packager:
+            enabled: true
+          packager:
+            enabled: true
+        mythx:
+          enabled: true
+          mode: standard
+          remap-import: "@openzeppelin/=$(pwd)/lib/smc-diamond/lib/openzeppelin/"
+      release:
+        compile:
+          java-wrapper:
+            enabled: true
+        artifact:
+          maven-packager:
+            enabled: true
+          packager:
+            enabled: true
+        mythx:
+          enabled: true
+          mode: standard
+          remap-import: "@openzeppelin/=$(pwd)/lib/smc-diamond/lib/openzeppelin/"
+      hotfix:
+        compile:
+          java-wrapper:
+            enabled: true
+        artifact:
+          maven-packager:
+            enabled: true
+          packager:
+            enabled: true
+        mythx:
+          enabled: true
+          mode: standard
+          remap-import: "@openzeppelin/=$(pwd)/lib/smc-diamond/lib/openzeppelin/"
+      main:
+        prepare-release:
+          enabled: true
+        compile:
+          java-wrapper:
+            enabled: true
+        artifact:
+          maven-packager:
+            enabled: true
+            artifactory-repo: dapps-maven-release-local
+          packager:
+            enabled: true
+            artifactory-repo: smc-release-local
+        mythx:
+          enabled: true
+          mode: standard
+          remap-import: "@openzeppelin/=$(pwd)/lib/smc-diamond/lib/openzeppelin/"
+            
+  cd:
+    promotion:
+      jira:
+        version-identifier: SMC-SU
+        project-key: DEVPILOT
+    environments:
+      dev10: 
+        node-version: 14
+        deployment:
+          runner: partior-runners-gcp-dev10
+          cmd:
+            - chmod 755 ./deploy.sh
+            - ./deploy.sh ${LOWERCASE_TARGET_ENV}.yml | tee build.log
+            - buildResultCode=\${PIPESTATUS[0]}
+            - echo "[INFO] Build exit code \$buildResultCode"
+            - exit \$buildResultCode
+        smc-continue-deployment:
+          enabled: true
+          next-smc-name: payment-utility
+        merge-yaml-config:
+          enabled: true
+        merge-yaml-setup-file:
+          enabled: true
+      dev11: 
+        node-version: 14
+        deployment:
+          runner: partior-runners-gcp-dev11
+          cmd:
+            - chmod 755 ./deploy.sh
+            - ./deploy.sh ${LOWERCASE_TARGET_ENV}.yml | tee build.log
+            - buildResultCode=\${PIPESTATUS[0]}
+            - echo "[INFO] Build exit code \$buildResultCode"
+            - exit \$buildResultCode
+        smc-continue-deployment:
+          enabled: true
+          next-smc-name: payment-utility
+
+      devnet01: 
+        node-version: 14
+        artifact-source:
+          artifact-group: partior
+          artifactory-repo: smc-dev
+        deployment:
+          runner: partior-runners-gcp-devnet01
+          cmd:
+            - chmod 755 ./deploy.sh
+            - ./deploy.sh ${LOWERCASE_TARGET_ENV}.yml | tee build.log
+            - buildResultCode=\${PIPESTATUS[0]}
+            - echo "[INFO] Build exit code \$buildResultCode"
+            - exit \$buildResultCode
+        smc-continue-deployment:
+          enabled: true
+          next-smc-name: payment-utility
+        merge-yaml-config:
+          enabled: true
+        merge-yaml-setup-file:
+          enabled: true
+      sitnet01: 
+        node-version: 14
+        artifact-source:
+          artifact-group: partior
+          artifactory-repo: smc-dev
+        deployment:
+          runner: partior-runners-gcp-sitnet01
+          cmd:
+            - chmod 755 ./deploy.sh
+            - ./deploy.sh ${LOWERCASE_TARGET_ENV}.yml | tee build.log
+            - buildResultCode=\${PIPESTATUS[0]}
+            - echo "[INFO] Build exit code \$buildResultCode"
+            - exit \$buildResultCode
+        smc-continue-deployment:
+          enabled: true
+          next-smc-name: payment-utility
+        merge-yaml-config:
+          enabled: true
+        merge-yaml-setup-file:
+          enabled: true
+      testnet01: 
+        node-version: 14
+        artifact-source:
+          artifact-group: partior
+          artifactory-repo: smc-dist-release-local
+        deployment:
+          runner: partior-runners-gcp-testnet01
+          cmd:
+            - chmod 755 ./deploy.sh
+            - ./deploy.sh ${LOWERCASE_TARGET_ENV}.yml | tee build.log
+            - buildResultCode=\${PIPESTATUS[0]}
+            - echo "[INFO] Build exit code \$buildResultCode"
+            - exit \$buildResultCode
+        smc-continue-deployment:
+          enabled: true
+          next-smc-name: payment-utility
+        merge-yaml-config:
+          enabled: true
+        merge-yaml-setup-file:
+          enabled: true
+      prodnet01: 
+        node-version: 14
+        artifact-source:
+          artifact-group: partior
+          artifactory-repo: smc-dist-release-local
+        deployment:
+          runner: partior-runners-gcp-prodnet01
+          cmd:
+            - chmod 755 ./deploy.sh
+            - ./deploy.sh ${LOWERCASE_TARGET_ENV}.yml | tee build.log
+            - buildResultCode=\${PIPESTATUS[0]}
+            - echo "[INFO] Build exit code \$buildResultCode"
+            - exit \$buildResultCode
+        smc-continue-deployment:
+          enabled: true
+          next-smc-name: payment-utility
+        merge-yaml-config:
+          enabled: true
+        merge-yaml-setup-file:
+          enabled: true

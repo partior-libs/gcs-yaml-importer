@@ -167,72 +167,11 @@ if [[ ! "$subPathFilterList" == "" ]]; then
         ## Store into a file for subsequent run
         finalSubKeyChild=$(echo $eachSubPath | sed "s/$pathFilter\.//g")
         echo $finalSubKeyChild >> $SUB_DEFAULT_KEY_LIST_FILE
-        getKeys "$eachSubPath" "tmp.element" "true"
-        rm -f tmp.element
+        getKeys "$eachSubPath" "$importerFilename" "true"
+        # exit 0
+        # rm -f tmp.element
 
     done
-fi
-## If sub default key list present
-if [[ -f $SUB_DEFAULT_KEY_LIST_FILE ]]; then
-    cat $SUB_DEFAULT_KEY_LIST_FILE | uniq > $SUB_DEFAULT_KEY_LIST_FILE.1
-    mv $SUB_DEFAULT_KEY_LIST_FILE.1 $SUB_DEFAULT_KEY_LIST_FILE
-    
-    while IFS="" read -r eachSubPath || [ -n "$eachSubPath" ]
-    do
-        echo "[INFO] Processing sub-default query path: ${pathFilter}.${eachSubPath}"
-        tmpSubQueryPath=${pathFilter}.${eachSubPath}
-        parentKeyforSubDefault="${tmpSubQueryPath%.*}"
-        subDefaultKey="${tmpSubQueryPath##*.}"
-        ## reset to root if at top level
-        if [[ "$parentKeyforSubDefault" == "" ]]; then
-            parentKeyforSubDefault="."
-        fi
-         
-        if (cat $inputYaml | yq -e "$parentKeyforSubDefault | keys" 2>/dev/null >/dev/null); then
-            subKeyDefaultItemList=$(cat $inputYaml | yq "$parentKeyforSubDefault | keys" | cut -d" " -f2)
-            IFS=' ' read -r -a subKeyDefaultItemListArray <<< "$(echo $subKeyDefaultItemList)"
-            for subKeyElement in "${subKeyDefaultItemListArray[@]}"
-            do
-                if [[ ! "$subDefaultKey" == "$subKeyElement" ]]; then
-                    finalSubDefaultKey=$(echo $parentKeyforSubDefault | sed "s/$pathFilter\.//g" | sed "s/\./_/g" )_$subKeyElement
-                    if [[ -f "$eachSubPath.kv-tmp" ]]; then
-                        while IFS="" read -r eachChildPath || [ -n "$eachChildPath" ]
-                        do
-                            subChildKey=$(echo $eachChildPath | cut -d"=" -f1)
-                            subChildValue=$(echo $eachChildPath | cut -d"=" -f1 --complement)
-                            # echo  "echo ::set-output name=${finalSubDefaultKey}_${subChildKey}::\"${subChildValue}\"" >> $importerFilename
-                            storeForGitHubEnv "${finalSubDefaultKey}_${subChildKey}" "${subChildValue}" "$importerFilename"
-                        done < $eachSubPath.kv-tmp
-                    fi
-                fi
-                # getKeys "$subKeyElement" "tmp.element" "true"
-                # rm -f tmp.element
-            done
-        else
-            echo "[WARNING] $BASH_SOURCE (line:$LINENO): Failed querying sub key default path: $parentKeyforSubDefault"
-        fi
-    done < $SUB_DEFAULT_KEY_LIST_FILE
-    # for eachSubPath in "$(cat $SUB_DEFAULT_KEY_LIST_FILE | xargs -i echo {} )"
-    # do
-    #     echo "[INFO] Processing sub-default query path: $eachSubPath"
-    #     # parentKeyforSubDefault="${eachSubPath%.*}"
-    #     # subDefaultKey="${eachSubPath##*.}"
-    #     # ## reset to root if at top level
-    #     # if [[ "$parentKeyforSubDefault" == "" ]]; then
-    #     #     parentKeyforSubDefault="."
-    #     # fi
-    #     # if (cat $inputYaml | yq -e "$parentKeyforSubDefault | keys" 2>/dev/null >/dev/null); then
-    #     #     subKeyDefaultItemList=$(cat $inputYaml | yq "$parentKeyforSubDefault | keys" | cut -d" " -f2)
-    #     #     IFS=' ' read -r -a subKeyDefaultItemListArray <<< "$(echo $subKeyDefaultItemList)"
-    #     #     for subKeyElement in "${subKeyDefaultItemListArray[@]}"
-    #     #     do
-    #     #         echo lalaaa $subKeyElement
-    #     #     done
-    #     # else
-    #     #     echo "[ERROR] $BASH_SOURCE (line:$LINENO): Failed querying sub key default path: $currentKey"
-    #     #     exit 1
-    #     # fi
-    # done
 fi
 
 ## Process the primary keys

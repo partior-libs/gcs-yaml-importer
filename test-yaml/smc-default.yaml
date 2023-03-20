@@ -1,0 +1,283 @@
+---
+smc:
+  ci:
+    artifact-base-name: default-artifact-name
+    mythx-project-id: 390182b7-7b6a-42c4-baa6-90104502ace0
+    artifact-auto-versioning:
+      enabled: true
+      initial-release-version: 0.0.1
+      major-version:
+        enabled: true
+        rules:
+          branches: 
+            target: release,develop,hotfix
+            enabled: true
+          message-tag: 
+            target: MAJOR-VERSION 
+            enabled: true
+          file:
+            enabled: false
+            target: ./app-version.cfg
+            key: MAJOR-VERSION
+      minor-version:
+        enabled: true
+        rules:
+          branches: 
+            target: release,develop,hotfix
+            enabled: true
+          message-tag: 
+            target: MINOR-VERSION 
+            enabled: true
+          file:
+            enabled: false
+            target: ./app-version.cfg
+            key: MINOR-VERSION
+      patch-version:
+        enabled: false
+        rules:
+          branches: 
+            target: main
+            enabled: true
+          message-tag: 
+            target: PATCH-VERSION 
+            enabled: false
+          file:   
+            enabled: false
+            target: ./app-version.cfg
+            key: PATCH-VERSION
+      release-candidate-version:
+        enabled: true
+        identifier: rc
+        rules:
+          branches: 
+            target: release,hotfix,
+            enabled: true
+          file:
+            enabled: false
+            target: ./app-version.cfg
+            key: RC-VERSION
+      development-version:
+        enabled: true
+        identifier: dev
+        rules:
+          branches: 
+            target: develop,feature,bugfix
+            enabled: true
+          file:
+            enabled: false
+            target: ./app-version.cfg
+            key: DEV-VERSION
+      build-version:
+        enabled: true
+        identifier: bld
+        rules:
+          branches: 
+            target: feature
+            enabled: true
+      replacement:
+        enabled: false
+        file-token: 
+          enabled: false
+          target: pom.xml
+          token: '@@VERSION_BOT_TOKEN@@'
+        maven-pom: 
+          enabled: false
+          target: pom.xml
+
+    branches:
+      default:
+        node-version: global-branch-default
+        prepare-release:
+          enabled: global-branch-default
+        compile:
+          java-wrapper:
+            enabled: global-branch-default
+            pom-file: global-branch-default
+          install-foundry:
+            enabled: global-branch-default
+          truffle-compile:
+            enabled: global-branch-default
+          solc-compile:
+            enabled: global-branch-default
+          script-compile:
+            enabled: global-branch-default
+            script-file: global-branch-default 
+        gitleaks:
+          enabled: global-branch-default
+          scan-depth: global-branch-default
+        codacy:
+          upload-coverage:
+            enabled: global-branch-default
+            coverage-file: global-branch-default
+          spotbugs:
+            enabled: global-branch-default
+        unit-test:
+          enabled: global-branch-default
+          coverage:
+            enabled: global-branch-default
+          ganache:
+            enabled: global-branch-default
+        # s3-code-push:
+        #   enabled: false
+        artifact:
+          maven-packager:
+            enabled: global-branch-default
+            jfrog-config-id: global-branch-default
+            ## Target repo for jar upload
+            artifactory-repo: global-branch-default
+            ## Resolving artifacts from following repos
+            artifactory-dev-repo: global-branch-default
+            artifactory-release-repo: global-branch-default
+          packager:
+            enabled: global-branch-default
+            group: global-branch-default
+            artifactory-username: global-branch-default
+            artifactory-repo: global-branch-default
+            artifactory-dev-repo: global-branch-default
+            artifactory-release-repo: global-branch-default
+            folder-list: global-branch-default
+            file-list: global-branch-default
+            store-version:
+              enabled: global-branch-default
+              git:
+                enabled: global-branch-default
+                repo: global-branch-default
+                branch: global-branch-default
+                yaml-store-path-key: global-branch-default
+                # Placeholder "@@ENV_NAME@@" will be replaced during iteration of list items in "store-version.git.target-envs"
+                target-env-file: global-branch-default
+                target-envs:
+                  - global-branch-default
+                  - global-branch-default2
+
+  cd:
+    promotion:
+      ## prerequisite-envs: Env must be deployed here before allowed for promotion. Support comma delimited
+      prerequisite-envs: dev02
+      jira:
+        version-identifier: SMC-SU
+        project-key: DEVPILOT
+      artifacts:
+        ## Yaml config stored in deploy-smc. Below info must first be read by action "partior-libs/gcs-pipe-utils/actions/generic-init-std-promotion-variables@partior-stable"
+        yaml-config:
+          - file: config/${LOWERCASE_TARGET_ENV}.yml
+            version-path: .packages.${ARTIFACT_BASE_NAME}.package-version
+            artifact-base-name: ${ARTIFACT_BASE_NAME}
+            artifact-group: partior
+            artifactory-src-repo: smc-dev-local
+            artifactory-promotion-repo: smc-release-local
+            artifact-type: tgz
+            store-version:
+              enabled: true
+              git:
+                enabled: true
+                repo: partior-quorum/deploy-smc
+                yaml-store-path-key: .packages.${ARTIFACT_BASE_NAME}.package-version
+                # Placeholder "@@ENV_NAME@@" will be replaced during iteration of list items in "store-version.git.target-envs"
+                target-env-file: config/@@ENV_NAME@@.yml
+                target-envs:
+                  - prod
+
+
+    environments:
+      default: 
+        node-version: 14
+        artifact-source:
+          artifact-group: partior
+          artifactory-repo: smc-dev
+          
+        override-deployment-yaml:
+          enabled: false
+          source-config-file: config/${LOWERCASE_TARGET_ENV}.yml
+          git-config:
+            enabled: false
+            src-yaml-path-key: .custom-override.smc-operator.privateFor
+            write-yaml-path-key: .ethersQuorumDeploy.privacy.privateFor
+            override-config-file: config/${LOWERCASE_TARGET_ENV}.yml
+
+        pre-deployment:
+          runner: ubuntu-latest
+          inside-deployment-job: true
+          cmd:
+            - echo Reserved pre-deployment 1
+            - echo Reserved pre-deployment 2
+            - echo Reserved pre-deployment 3
+            - echo Reserved pre-deployment 4
+            - echo Reserved pre-deployment 5
+            - echo Reserved pre-deployment 6
+            - echo Reserved pre-deployment 7
+            - echo Reserved pre-deployment 8
+            - echo Reserved pre-deployment 9
+            - echo Reserved pre-deployment 10
+        deployment:
+          runner: partior-runners
+          cmd:
+            - echo Reserved deployment 1
+            - echo Reserved deployment 2
+            - echo Reserved deployment 3
+            - echo Reserved deployment 4
+            - echo Reserved deployment 5
+            - echo Reserved deployment 6
+            - echo Reserved deployment 7
+            - echo Reserved deployment 8
+            - echo Reserved deployment 9
+            - echo Reserved deployment 10
+        post-deployment:
+          runner: self-hosted
+          store-deployment-record:
+            enabled: true
+            standard-details:
+              file: config/${LOWERCASE_TARGET_ENV}_deployed_manifest.yml
+              parent-key: .packages.${ARTIFACT_BASE_NAME}.deployed
+            address-from-lookup-script:
+              enabled: false
+              lookup-key: NIL
+          cmd:
+            - echo Reserved post-deployment 1
+            - echo Reserved post-deployment 2
+            - echo Reserved post-deployment 3
+            - echo Reserved post-deployment 4
+            - echo Reserved post-deployment 5
+            - echo Reserved post-deployment 6
+            - echo Reserved post-deployment 7
+            - echo Reserved post-deployment 8
+            - echo Reserved post-deployment 9
+            - echo Reserved post-deployment 10
+        smc-initial-setup:
+          enabled: false
+          runner: partior-runners
+          setup-sequence:
+            - onboarding
+            - settlement-utility
+            - payment-utility
+        smc-continue-deployment:
+          enabled: false
+          next-smc-name: smc-name
+
+        sql-update:
+          enabled: true
+          target-org: partior-quorum
+          target-repo: dapps-sql-scripts
+          db-type: psql
+          db-component: message_processor
+          db-provider: gcp
+
+        merge-yaml-config:
+          enabled: false
+          target-file: config/${LOWERCASE_TARGET_ENV}.yml
+          exclude-keys: ''
+          git-config:
+            enabled: true
+            yaml-path-key: .ethersQuorumDeploy
+            override-config-file: deployment.yaml
+
+        merge-yaml-setup-file:
+          enabled: false
+          target-file: config/${LOWERCASE_TARGET_ENV}.yml
+          exclude-keys: ''
+          git-config:
+            enabled: true
+            yaml-path-key: .ethersQuorumSetup
+            override-config-file: setup.yaml
+
+

@@ -25,7 +25,6 @@ smc:
             script-file: project-branch-default 
         gitleaks:
           enabled: project-branch-default
-          scan-depth: project-branch-default
         codacy:
           upload-coverage:
             enabled: project-branch-default
@@ -44,18 +43,9 @@ smc:
           maven-packager:
             enabled: project-branch-default
             jfrog-config-id: project-branch-default
-            ## Target repo for jar upload
-            artifactory-repo: project-branch-default
-            ## Resolving artifacts from following repos
-            artifactory-dev-repo: project-branch-default
-            artifactory-release-repo: project-branch-default
           packager:
             enabled: project-branch-default
             group: project-branch-default
-            artifactory-username: project-branch-default
-            artifactory-repo: project-branch-default
-            artifactory-dev-repo: project-branch-default
-            artifactory-release-repo: project-branch-default
             folder-list: project-branch-default
             file-list: project-branch-default
             store-version:

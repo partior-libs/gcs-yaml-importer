@@ -121,9 +121,10 @@ function getKeys()
             echo "[WARNING] $BASH_SOURCE (line:$LINENO): Failed querying path: $currentKey"
             if [[ ! -f "$outputimporterFilename" ]]; then
                 echo "[ERROR] $BASH_SOURCE (line:$LINENO): Importer file [$outputimporterFilename] not present. At least one yaml file or query path must be valid. Check yaml and query path for invalid parameters"
+                exit 1
             else
                 echo "[INFO] Skipping.. importer file present: $outputimporterFilename"
-                exit 0
+                return 0
             fi
 
         else
@@ -265,9 +266,6 @@ if [[ ! "$subPathFilterList" == "" ]]; then
         finalSubKeyChild=$(echo $eachSubPath | sed "s/$pathFilter\.//g")
         echo $finalSubKeyChild >> $SUB_DEFAULT_KEY_LIST_FILE
         getKeys "$eachSubPath" "$importerFilename" "true"
-        # exit 0
-        # rm -f tmp.element
-
     done
 fi
 

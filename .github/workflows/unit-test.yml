@@ -5,6 +5,7 @@ on: [push, pull_request, workflow_dispatch]
 env:
   CONFIG_IMPORTER_4: anyname_4_${{ github.run_id }}_${{ github.run_number }}
   CONFIG_IMPORTER_5: anyname_5_${{ github.run_id }}_${{ github.run_number }}
+  CONFIG_IMPORTER_6: anyname_6_${{ github.run_id }}_${{ github.run_number }}
 jobs:
   test-scenario-1-reader:
     runs-on: ubuntu-latest
@@ -195,7 +196,7 @@ jobs:
           echo CI_CODESCAN: ${{ steps.yml-config.outputs.ci-pipeline_codescan }}
           echo CI_BLD_CMD: ${{ steps.yml-config.outputs.ci-pipeline_build-cmd }}
           echo CD_NPROD_ENV: ${{ steps.yml-config.outputs.cd-pipeline_prod-environments }}
-
+  ## Test with valid sub default
   test-scenario-5-reader:
     runs-on: ubuntu-latest
     steps:
@@ -226,6 +227,87 @@ jobs:
           source ./${{ env.CONFIG_IMPORTER_5 }}   
 
       - name: Reading from previous config reader 5
+        run:  |
+          echo artifact_maven-packager_artifactory-dev-repo: ${{ steps.yml-branch-config.outputs.artifact_maven-packager_artifactory-dev-repo }}
+          echo artifact_maven-packager_artifactory-release-repo: ${{ steps.yml-branch-config.outputs.artifact_maven-packager_artifactory-release-repo }}
+          echo artifact_maven-packager_artifactory-repo: ${{ steps.yml-branch-config.outputs.artifact_maven-packager_artifactory-repo }}
+          echo artifact_maven-packager_enabled: ${{ steps.yml-branch-config.outputs.artifact_maven-packager_enabled }}
+          echo artifact_maven-packager_jfrog-config-id: ${{ steps.yml-branch-config.outputs.artifact_maven-packager_jfrog-config-id }}
+          echo artifact_packager_artifactory-dev-repo: ${{ steps.yml-branch-config.outputs.artifact_packager_artifactory-dev-repo }}
+          echo artifact_packager_artifactory-release-repo: ${{ steps.yml-branch-config.outputs.artifact_packager_artifactory-release-repo }}
+          echo artifact_packager_artifactory-repo: ${{ steps.yml-branch-config.outputs.artifact_packager_artifactory-repo }}
+          echo artifact_packager_artifactory-username: ${{ steps.yml-branch-config.outputs.artifact_packager_artifactory-username }}
+          echo artifact_packager_enabled: ${{ steps.yml-branch-config.outputs.artifact_packager_enabled }}
+          echo artifact_packager_file-list: ${{ steps.yml-branch-config.outputs.artifact_packager_file-list }}
+          echo artifact_packager_folder-list: ${{ steps.yml-branch-config.outputs.artifact_packager_folder-list }}
+          echo artifact_packager_group: ${{ steps.yml-branch-config.outputs.artifact_packager_group }}
+          echo artifact_packager_store-version_enabled: ${{ steps.yml-branch-config.outputs.artifact_packager_store-version_enabled }}
+          echo artifact_packager_store-version_git_branch: ${{ steps.yml-branch-config.outputs.artifact_packager_store-version_git_branch }}
+          echo artifact_packager_store-version_git_enabled: ${{ steps.yml-branch-config.outputs.artifact_packager_store-version_git_enabled }}
+          echo artifact_packager_store-version_git_repo: ${{ steps.yml-branch-config.outputs.artifact_packager_store-version_git_repo }}
+          echo artifact_packager_store-version_git_target-env-file: ${{ steps.yml-branch-config.outputs.artifact_packager_store-version_git_target-env-file }}
+          echo artifact_packager_store-version_git_target-envs: ${{ steps.yml-branch-config.outputs.artifact_packager_store-version_git_target-envs }}
+          echo artifact_packager_store-version_git_target-envs_0: ${{ steps.yml-branch-config.outputs.artifact_packager_store-version_git_target-envs_0 }}
+          echo artifact_packager_store-version_git_target-envs_1: ${{ steps.yml-branch-config.outputs.artifact_packager_store-version_git_target-envs_1 }}
+          echo artifact_packager_store-version_git_yaml-store-path-key: ${{ steps.yml-branch-config.outputs.artifact_packager_store-version_git_yaml-store-path-key }}
+          echo codacy_spotbugs_enabled: ${{ steps.yml-branch-config.outputs.codacy_spotbugs_enabled }}
+          echo codacy_upload-coverage_coverage-file: ${{ steps.yml-branch-config.outputs.codacy_upload-coverage_coverage-file }}
+          echo codacy_upload-coverage_enabled: ${{ steps.yml-branch-config.outputs.codacy_upload-coverage_enabled }}
+          echo compile_install-foundry_enabled: ${{ steps.yml-branch-config.outputs.compile_install-foundry_enabled }}
+          echo compile_java-wrapper_enabled: ${{ steps.yml-branch-config.outputs.compile_java-wrapper_enabled }}
+          echo compile_java-wrapper_pom-file: ${{ steps.yml-branch-config.outputs.compile_java-wrapper_pom-file }}
+          echo compile_script-compile_enabled: ${{ steps.yml-branch-config.outputs.compile_script-compile_enabled }}
+          echo compile_script-compile_script-file: ${{ steps.yml-branch-config.outputs.compile_script-compile_script-file }}
+          echo compile_solc-compile_enabled: ${{ steps.yml-branch-config.outputs.compile_solc-compile_enabled }}
+          echo compile_truffle-compile_enabled: ${{ steps.yml-branch-config.outputs.compile_truffle-compile_enabled }}
+          echo deployment_enabled: ${{ steps.yml-branch-config.outputs.deployment_enabled }}
+          echo deployment_repo: ${{ steps.yml-branch-config.outputs.deployment_repo }}
+          echo deployment_target-env: ${{ steps.yml-branch-config.outputs.deployment_target-env }}
+          echo deployment_type: ${{ steps.yml-branch-config.outputs.deployment_type }}
+          echo gitleaks_enabled: ${{ steps.yml-branch-config.outputs.gitleaks_enabled }}
+          echo gitleaks_scan-depth: ${{ steps.yml-branch-config.outputs.gitleaks_scan-depth }}
+          echo mythx_contracts-path: ${{ steps.yml-branch-config.outputs.mythx_contracts-path }}
+          echo mythx_enabled: ${{ steps.yml-branch-config.outputs.mythx_enabled }}
+          echo mythx_mode: ${{ steps.yml-branch-config.outputs.mythx_mode }}
+          echo mythx_remap-import: ${{ steps.yml-branch-config.outputs.mythx_remap-import }}
+          echo mythx_update-pr_enabled: ${{ steps.yml-branch-config.outputs.mythx_update-pr_enabled }}
+          echo node-version: ${{ steps.yml-branch-config.outputs.node-version }}
+          echo prepare-release_enabled: ${{ steps.yml-branch-config.outputs.prepare-release_enabled }}
+          echo unit-test_coverage_enabled: ${{ steps.yml-branch-config.outputs.unit-test_coverage_enabled }}
+          echo unit-test_enabled: ${{ steps.yml-branch-config.outputs.unit-test_enabled }}
+          echo unit-test_ganache_enabled: ${{ steps.yml-branch-config.outputs.unit-test_ganache_enabled }}
+
+  ## Test if invalid sub default
+  test-scenario-6-reader:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Test with upload flag
+        id: yaml-importer-creator
+        uses: partior-libs/gcs-yaml-importer@main
+        with:
+          yaml-file: test-yaml/smc-app.yaml
+          query-path: .smc.ci.branches.feature
+          set-sub-default-keys: .smc.ci.branches.nonexistent
+          yaml-file-for-default: test-yaml/smc-default.yaml
+          query-path-for-default: .smc.ci.branches.default
+          output-file: ${{ env.CONFIG_IMPORTER_6 }}
+          upload: true
+
+  test-scenario-6-consumer:
+    runs-on: ubuntu-latest
+    needs: [ test-scenario-6-reader ]
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.CONFIG_IMPORTER_6 }}
+      - name: Start import
+        id: yml-branch-config
+        run: |
+          echo Importing ...${{ env.CONFIG_IMPORTER_6 }}
+          source ./${{ env.CONFIG_IMPORTER_6 }}   
+
+      - name: Reading from previous config reader 6
         run:  |
           echo artifact_maven-packager_artifactory-dev-repo: ${{ steps.yml-branch-config.outputs.artifact_maven-packager_artifactory-dev-repo }}
           echo artifact_maven-packager_artifactory-release-repo: ${{ steps.yml-branch-config.outputs.artifact_maven-packager_artifactory-release-repo }}

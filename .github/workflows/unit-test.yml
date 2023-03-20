@@ -205,10 +205,10 @@ jobs:
         uses: partior-libs/gcs-yaml-importer@main
         with:
           yaml-file: test-yaml/smc-app.yaml
-          query-path: .ci.branches.feature
-          set-sub-default-keys: .ci.branches.default
+          query-path: .smc.ci.branches.feature
+          set-sub-default-keys: .smc.ci.branches.default
           yaml-file-for-default: test-yaml/smc-default.yaml
-          query-path-for-default: .ci.branches.default
+          query-path-for-default: .smc.ci.branches.default
           output-file: ${{ env.CONFIG_IMPORTER_5 }}
           upload: true
 

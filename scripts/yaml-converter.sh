@@ -280,8 +280,10 @@ getKeys "$pathFilter" "$importerFilename" "false"
 sed -i "s/\\\\\\\\\\$/\\\\\\\\\\\\$/g" "$importerFilename"
 
 ## Removing duplicate KVs which are flat for list (ie: some_key__0)
-echo [INFO] Removing duplicate list keys...
-removeDuplicateListKeys "$importerFilename"
+if ("${skipIfNotFound}"); then
+    echo [INFO] Removing duplicate list keys...
+    removeDuplicateListKeys "$importerFilename"
+fi
 
 echo [INFO] Completed...
 

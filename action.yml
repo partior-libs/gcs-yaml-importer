@@ -18,11 +18,11 @@ inputs:
     required: false
     default: ''
   set-sub-default-keys:  
-    description: 'Comma delimited sub default keys'
+    description: 'Comma delimited sub default keys from yaml-file file. ie: ci.branches.default,ci.another.default'
     required: false
     default: ''
   set-sub-default-keys-for-default:  
-    description: 'Comma delimited sub default keys on default value file'
+    description: 'Comma delimited sub default keys from yaml-file-for-default file. ie: ci.branches.default,ci.another.default'
     required: false
     default: ''
   output-file:  

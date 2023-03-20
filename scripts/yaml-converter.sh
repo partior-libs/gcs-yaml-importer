@@ -154,6 +154,55 @@ function storeForGitHubEnv() {
     fi
 }
 
+## Check if the string is a flatten string
+function isList (){
+    local inputString="$1"
+    local pattern='^[ a-zA-Z0-9\_\-]+_[0-9]+='
+
+    if [[ $inputString =~ $pattern ]]; then
+        echo "true"
+    else
+        echo "false"
+    fi
+    return 0
+}
+
+## Check if string of input line number has duplicate at lower section
+function isDuplicateList() {
+    local foundLineNumber="$1"
+    local inputFile="$2"
+    local currentSearchLine=0
+    local foundSearchListKey=""
+    local foundSearchNonList=false
+    while IFS= read -r eachSearchLine
+    do
+        currentSearchLine=$((1+$currentSearchLine))
+        if [[ $currentSearchLine -eq $foundLineNumber ]]; then
+            foundSearchListKey=$( echo $eachSearchLine | cut -d"=" -f1 | cut -d" " -f2 |  sed 's/[0-9]\+$//')
+        elif [[ $currentSearchLine -gt $foundLineNumber ]]; then
+            currentKey=$( echo $eachSearchLine | cut -d"=" -f1 | cut -d" " -f2 |  sed 's/[0-9]\+$//')
+            currentKeyGHO=$currentKey
+            currentKeyGHE=$( echo $currentKey | sed 's/_/__/' | sed 's/-/_/')
+            currentTransformedGHO=$( echo $currentKey | sed 's/__/@/' | sed 's/_/-/' | sed 's/@/_/')
+            if [[ $(isList "$eachSearchLine") == "true" ]] && ([[ "$foundSearchListKey" == "$currentKeyGHO" ]] || [[ "$foundSearchListKey" == "$currentKeyGHE" ]] || [[ "$foundSearchListKey" == "$currentTransformedGHO" ]]); then
+                ## Still within the same list...Skip
+                if [[ $foundSearchNonList == "true" ]]; then
+                    # echo "true currentKey=$currentKey foundSearchListKey:$foundSearchListKey currentKeyGHO:$currentKeyGHO currentKeyGHE:$currentKeyGHE currentTransformedGHO:$currentTransformedGHO"
+                    echo "true"
+                    foundSearchNonList=false
+                    return 0
+                fi
+            elif [[ $(isList "$eachSearchLine") == "false" ]]; then
+                ## Found non list
+                # echo "false foundSearchListKey:$foundSearchListKey currentKeyGHO:$currentKeyGHO currentKeyGHE:$currentKeyGHE"
+                foundSearchNonList=true
+            fi
+        fi
+    done < "$inputFile"
+    echo "false"
+    return 0
+}
+
 echo [INFO] Reading $inputYaml...
 echo [INFO] Path filter: [$pathFilter]
 echo [INFO] Target imported file: [$importerFilename]
@@ -181,6 +230,36 @@ getKeys "$pathFilter" "$importerFilename" "false"
 
 ## Escape special chars
 sed -i "s/\\\\\\\\\\$/\\\\\\\\\\\\$/g" "$importerFilename"
+
+## Removing duplicate KVs which are flat for list (ie: some_key__0)
+echo [INFO] Removing duplicate list keys...
+currentLine=0
+foundList=false
+pattern='_[0-9]+='
+while IFS= read -r eachLine
+do
+    currentLine=$((1+$currentLine))
+    # echo "[INFO] Checking duplicate for line [$currentLine]"
+    if [[ $eachLine =~ $pattern ]]; then
+        # echo "[DEBUG] Found list: $eachLine"
+        echo "[INFO] Checking duplicate for [$eachLine]"
+        ## if found for the first time
+        # isDuplicateList "$currentLine" "$input"
+        isDupListFlag=$(isDuplicateList "$currentLine" "$importerFilename")
+        if [[ "$isDupListFlag" == "false" ]]; then 
+            echo "$eachLine" >> $importerFilename.2
+        fi
+        # fi
+
+    else
+        if [[ ! -z "$eachLine" ]]; then
+            # echo NOT found $eachLine
+            echo "$eachLine" >> $importerFilename.2
+        fi
+    fi
+
+done < "$importerFilename"
+mv $importerFilename.2 $importerFilename
 
 echo [INFO] Completed...
 

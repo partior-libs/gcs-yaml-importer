@@ -1,12 +1,12 @@
 # gcs-yaml-importer
-Convert and Import YAML configuration into flat variable in Github Action 
+Convert and Import YAML configuration into flat variables in Github Action 
 
-This action is to address reading of multi-tiers yaml config file and convert all the key values within the scope into Github flat variables (that can be assess via the jobs output)
+This action is to address reading of multi-tiered yaml config file and convert all the key values within the scope into Github flat variables (that can be assessed via the `jobs` output)
 
-This action will generate a executable shell script. Once the script being executed, it will populate the yaml keys and value into GitHub Actions variables
+This action will generate a executable shell script. Once the script being executed, it will populate the `yaml` keys and value into GitHub Actions variables
 
 ### Supported inputs
-```
+```yaml
   yaml-file:  
     description: 'Path to YAML file'
     optional: no
@@ -42,13 +42,13 @@ This action will generate a executable shell script. Once the script being execu
 ```
 
 ### Output from the action
-```
+```yaml
   importer-filename:
     description: "Filename of the importer script"
 ```
 
 ### Sample Workflow
-```
+```yaml
 name: Test YAML Importer
 
 on: [push, pull_request, workflow_dispatch]

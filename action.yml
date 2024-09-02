@@ -51,7 +51,7 @@ runs:
       if: inputs.override-artifact-base-name != ''
       run: |
         echo "[INFO] Start overriding artifact base name with [${{ inputs.override-artifact-base-name }}]..."
-        yamlFiles="${{ inputs.yaml-file-for-default }} "${{ inputs.yaml-file }}"
+        yamlFiles="${{ inputs.yaml-file-for-default }} ${{ inputs.yaml-file }}"
         for eachYamlFile in "$yamlFiles"
         do
           currentArtifactBaseName=$(yq e '.action-pack.ci.artifact-base-name' "$eachYamlFile")

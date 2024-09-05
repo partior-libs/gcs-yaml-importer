@@ -33,6 +33,10 @@ inputs:
     description: 'Flag to indicate if require to upload the importer file'
     required: false
     default: false
+  override-artifact-base-name:  
+    description: 'Override artifact base name'
+    required: false
+    default: ''
 outputs:
   importer-filename:
     description: "Filename of the importer script"
@@ -42,6 +46,23 @@ runs:
   steps:
     - name: clean cache files
       run: echo "filename=$(echo $(${{ github.action_path }}/scripts/clean-files.sh ${{ inputs.output-file }} ))" >> $GITHUB_OUTPUT
+      shell: bash
+    - name: Override artifact-base-name
+      if: inputs.override-artifact-base-name != ''
+      run: |
+        echo "[INFO] Start overriding artifact base name with [${{ inputs.override-artifact-base-name }}]..."
+        yamlFiles="${{ inputs.yaml-file-for-default }} ${{ inputs.yaml-file }}"
+        for eachYamlFile in $yamlFiles
+        do
+          echo "[INFO] Updating... [$eachYamlFile]"
+          currentArtifactBaseName=$(yq e '.action-pack.ci.artifact-base-name' "$eachYamlFile")
+          if [[ -z "$currentArtifactBaseName" ]] || [[ "$currentArtifactBaseName" == "null" ]]; then
+            echo "[INFO] Base name not found. Skipping.."
+          else
+            yq e -i ".action-pack.ci.artifact-base-name = \"${{ inputs.override-artifact-base-name }}\"" "$eachYamlFile"
+            echo "[INFO] Base name updated successfully..."
+          fi
+        done
       shell: bash
     - name: create importer for default value
       if: inputs.yaml-file-for-default != ''

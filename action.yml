@@ -80,5 +80,6 @@ runs:
         name: ${{ steps.importer.outputs.filename }}
         path: ${{ steps.importer.outputs.filename }}
         retention-days: 1
+        overwrite: true
     - run: echo Done creating importer file...
       shell: bash

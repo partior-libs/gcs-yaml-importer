@@ -55,11 +55,11 @@ runs:
         for eachYamlFile in $yamlFiles
         do
           echo "[INFO] Updating... [$eachYamlFile]"
-          currentArtifactBaseName=$(yq e '.action-pack.ci.artifact-base-name' "$eachYamlFile")
+          currentArtifactBaseName=$(yq e '.*.ci.artifact-base-name' "$eachYamlFile" | head -n1)
           if [[ -z "$currentArtifactBaseName" ]] || [[ "$currentArtifactBaseName" == "null" ]]; then
             echo "[INFO] Base name not found. Skipping.."
           else
-            yq e -i ".action-pack.ci.artifact-base-name = \"${{ inputs.override-artifact-base-name }}\"" "$eachYamlFile"
+            yq e -i ".*.ci.artifact-base-name = \"${{ inputs.override-artifact-base-name }}\"" "$eachYamlFile"
             echo "[INFO] Base name updated successfully..."
           fi
         done

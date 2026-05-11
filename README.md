@@ -1,240 +1,121 @@
 # gcs-yaml-importer
-Convert and Import YAML configuration into flat variables in Github Action 
 
-This action is to address reading of multi-tiered yaml config file and convert all the key values within the scope into Github flat variables (that can be assessed via the `jobs` output)
+> GitHub Composite Action that parses a YAML configuration file and exports its key-value pairs as flat GitHub Actions environment variables, with support for default-value overlays and optional artifact upload.
 
-This action will generate a executable shell script. Once the script being executed, it will populate the `yaml` keys and value into GitHub Actions variables
+## Overview
 
-### Supported inputs
+`gcs-yaml-importer` uses `yq` to traverse a YAML file at an optional query path and converts each leaf value into a flat environment variable file (importer file) suitable for `source`-ing in subsequent steps. It supports:
+
+- A **primary** YAML file and an optional **default** YAML file (values in the primary override the default).
+- Sub-default keys — specific nested paths to merge as fallback defaults.
+- Overriding the `artifact-base-name` field across both YAML files before parsing.
+- Optional upload of the generated importer file as a GitHub Actions artifact.
+
+## Usage
+
 ```yaml
-  yaml-file:  
-    description: 'Path to YAML file'
-    optional: no
-    default: 'default-config.yaml'
-  query-path:  
-    description: 'Path of config to be read'
-    optional: yes
-    default: '.'
-  yaml-file-for-default:  
-    description: 'Path to YAML file which contain default value'
-    optional: yes
-    default: ''
-  query-path-for-default:  
-    description: 'YAML query path for default value'
-    optional: yes
-    default: ''
-  set-sub-default-keys:  
-    description: 'Comma delimited sub default keys'
-    optional: yes
-    default: ''
-  set-sub-default-keys-for-default:  
-    description: 'Comma delimited sub default keys on default value file'
-    optional: yes
-    default: ''
-  output-file:  
-    description: 'Custom path of the output file'
-    optional: yes
-    default: 'start_import.sh'
-  upload:  
-    description: 'Flag to indicate if require to upload the importer file'
-    optional: yes
-    default: false
+- id: import-config
+  uses: partior-libs/gcs-yaml-importer@main
+  with:
+    yaml-file: config/smc-app.yaml
+    query-path: .my-service.ci
 ```
 
-### Output from the action
+## Inputs
+
+| Input | Description | Required | Default |
+|-------|-------------|----------|---------|
+| `yaml-file` | Path to the primary YAML file to parse | Yes | `default-config.yaml` |
+| `yaml-file-for-default` | Path to a YAML file providing fallback/default values | No | `""` |
+| `query-path` | `yq`-style query path within the primary YAML (e.g. `.my-service.ci`) | No | `""` (root) |
+| `query-path-for-default` | `yq`-style query path within the default YAML file | No | `""` |
+| `set-sub-default-keys` | Comma-delimited list of sub-paths in the primary YAML to treat as defaults (e.g. `ci.branches.default`) | No | `""` |
+| `set-sub-default-keys-for-default` | Same as above but for the default YAML file | No | `""` |
+| `output-file` | Custom path for the generated importer file | No | *(auto-generated)* |
+| `upload` | Upload the importer file as a GitHub Actions artifact | No | `false` |
+| `override-artifact-base-name` | Override the `artifact-base-name` key in both YAML files before parsing | No | `""` |
+
+## Outputs
+
+| Output | Description |
+|--------|-------------|
+| `importer-filename` | Path to the generated importer environment file |
+
+## Prerequisites
+
+- `yq` must be installed on the runner. Use [`gcs-setup-yq`](../gcs-setup-yq/) if it is not pre-installed.
+- YAML files must be committed to the repository or downloaded before this step runs.
+
+## Examples
+
+### Import versioning config
+
 ```yaml
-  importer-filename:
-    description: "Filename of the importer script"
+- uses: partior-libs/gcs-setup-yq@main
+
+- id: import
+  uses: partior-libs/gcs-yaml-importer@main
+  with:
+    yaml-file: config/versioning-rules.yaml
+    query-path: .artifact-auto-versioning
+
+- name: Source and use variables
+  run: |
+    source ${{ steps.import.outputs.importer-filename }}
+    echo "Versioning strategy: $artifact_auto_versioning_strategy"
 ```
 
-### Sample Workflow
+### Import with defaults overlay
+
 ```yaml
-name: Test YAML Importer
-
-on: [push, pull_request, workflow_dispatch]
-
-env:
-  CONFIG_IMPORTER_4: anyname_${{ github.run_id }}_${{ github.run_number }}
-jobs:
-  test-scenario-1-reader:
-    runs-on: ubuntu-latest
-    outputs:
-      PROJECT-NAME: ${{ steps.yaml-importer.outputs.project2_name }}
-      TEST1-FLAG: ${{ steps.yaml-importer.outputs.project2_test_test1 }}
-      TEST2-FLAG: ${{ steps.yaml-importer.outputs.project2_test_test2 }}
-      TEST-CMD: ${{ steps.yaml-importer.outputs.project2_test_cmd }}
-      CI-CODESCAN: ${{ steps.yaml-importer.outputs.project2_ci-pipeline_codescan }}
-      CI-BLD-CMD: ${{ steps.yaml-importer.outputs.project2_ci-pipeline_build-cmd }}
-      CD-NPROD-ENV: ${{ steps.yaml-importer.outputs.project2_cd-pipeline_prod-environments }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Test without query scope
-        id: yaml-importer-creator
-        uses: partior-libs/gcs-yaml-importer@partior-stable
-        with:
-          yaml-file: test-yaml/testing.yaml
-          query-path: .
-      - name: Start import
-        id: yaml-importer
-        run:  |
-          echo Running ...${{ steps.yaml-importer-creator.outputs.importer-filename}}
-          ./${{ steps.yaml-importer-creator.outputs.importer-filename}}
-
-  test-scenario-1-consumer:
-    runs-on: ubuntu-latest
-    needs: [ test-scenario-1-reader ]
-    env: 
-      PROJECT_NAME: ${{ needs.test-scenario-1-reader.outputs.PROJECT-NAME }}
-      TEST1_FLAG: ${{ needs.test-scenario-1-reader.outputs.TEST1-FLAG }}
-      TEST2_FLAG: ${{ needs.test-scenario-1-reader.outputs.TEST2-FLAG }}
-      TEST_CMD: ${{ needs.test-scenario-1-reader.outputs.TEST-CMD }}
-      CI_CODESCAN: ${{ needs.test-scenario-1-reader.outputs.CI-CODESCAN }}
-      CI_BLD_CMD: ${{ needs.test-scenario-1-reader.outputs.CI-BLD-CMD }}
-      CD_NPROD_ENV: ${{ needs.test-scenario-1-reader.outputs.CD-NPROD-ENV }}
-    steps:
-      - name: Reading from previous config reader 1
-        run:  |
-          echo PROJECT_NAME: ${PROJECT_NAME}
-          echo TEST1_FLAG: ${TEST1_FLAG}
-          echo TEST2_FLAG: ${TEST2_FLAG}
-          echo TEST_CMD: ${TEST_CMD}
-          echo CI_CODESCAN: ${CI_CODESCAN}
-          echo CI_BLD_CMD: ${CI_BLD_CMD}
-          echo CD_NPROD_ENV: ${CD_NPROD_ENV}
-
-  test-scenario-2-reader:
-    runs-on: ubuntu-latest
-    outputs:
-      PROJECT-NAME: ${{ steps.yaml-importer.outputs.name }}
-      TEST1-FLAG: ${{ steps.yaml-importer.outputs.test_test1 }}
-      TEST2-FLAG: ${{ steps.yaml-importer.outputs.test_test2 }}
-      TEST-CMD: ${{ steps.yaml-importer.outputs.test_cmd }}
-      CI-CODESCAN: ${{ steps.yaml-importer.outputs.ci-pipeline_codescan }}
-      CI-BLD-CMD: ${{ steps.yaml-importer.outputs.ci-pipeline_build-cmd }}
-      CD-NPROD-ENV: ${{ steps.yaml-importer.outputs.cd-pipeline_prod-environments }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Test with query scope
-        id: yaml-importer-creator
-        uses: partior-libs/gcs-yaml-importer@partior-stable
-        with:
-          yaml-file: test-yaml/testing.yaml
-          query-path: .project
-      - name: Start import
-        id: yaml-importer
-        run:  |
-          echo Running ...${{ steps.yaml-importer-creator.outputs.importer-filename}}
-          ./${{ steps.yaml-importer-creator.outputs.importer-filename}}
-
-  test-scenario-2-consumer:
-    runs-on: ubuntu-latest
-    needs: [ test-scenario-2-reader ]
-    env: 
-      PROJECT_NAME: ${{ needs.test-scenario-2-reader.outputs.PROJECT-NAME }}
-      TEST1_FLAG: ${{ needs.test-scenario-2-reader.outputs.TEST1-FLAG }}
-      TEST2_FLAG: ${{ needs.test-scenario-2-reader.outputs.TEST2-FLAG }}
-      TEST_CMD: ${{ needs.test-scenario-2-reader.outputs.TEST-CMD }}
-      CI_CODESCAN: ${{ needs.test-scenario-2-reader.outputs.CI-CODESCAN }}
-      CI_BLD_CMD: ${{ needs.test-scenario-2-reader.outputs.CI-BLD-CMD }}
-      CD_NPROD_ENV: ${{ needs.test-scenario-2-reader.outputs.CD-NPROD-ENV }}
-    steps:
-      - name: Reading from previous config reader 2
-        run:  |
-          echo PROJECT_NAME: ${PROJECT_NAME}
-          echo TEST1_FLAG: ${TEST1_FLAG}
-          echo TEST2_FLAG: ${TEST2_FLAG}
-          echo TEST_CMD: ${TEST_CMD}
-          echo CI_CODESCAN: ${CI_CODESCAN}
-          echo CI_BLD_CMD: ${CI_BLD_CMD}
-          echo CD_NPROD_ENV: ${CD_NPROD_ENV}
-
-  test-scenario-3-reader:
-    runs-on: ubuntu-latest
-    outputs:
-      PROJECT-NAME: ${{ steps.yaml-importer.outputs.name }}
-      TEST1-FLAG: ${{ steps.yaml-importer.outputs.test_test1 }}
-      TEST2-FLAG: ${{ steps.yaml-importer.outputs.test_test2 }}
-      TEST-CMD: ${{ steps.yaml-importer.outputs.test_cmd }}
-      CI-CODESCAN: ${{ steps.yaml-importer.outputs.ci-pipeline_codescan }}
-      CI-BLD-CMD: ${{ steps.yaml-importer.outputs.ci-pipeline_build-cmd }}
-      CD-NPROD-ENV: ${{ steps.yaml-importer.outputs.cd-pipeline_prod-environments }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Test with query scope and custom importer filename
-        id: yaml-importer-creator
-        uses: partior-libs/gcs-yaml-importer@partior-stable
-        with:
-          yaml-file: test-yaml/testing.yaml
-          query-path: .project3
-          output-file: custom-importer.sh
-      - name: Start import
-        id: yaml-importer
-        run: |
-          echo Running ...${{ steps.yaml-importer-creator.outputs.importer-filename}}
-          ./${{ steps.yaml-importer-creator.outputs.importer-filename}}
-
-  test-scenario-3-consumer:
-    runs-on: ubuntu-latest
-    needs: [ test-scenario-3-reader ]
-    env: 
-      PROJECT_NAME: ${{ needs.test-scenario-3-reader.outputs.PROJECT-NAME }}
-      TEST1_FLAG: ${{ needs.test-scenario-3-reader.outputs.TEST1-FLAG }}
-      TEST2_FLAG: ${{ needs.test-scenario-3-reader.outputs.TEST2-FLAG }}
-      TEST_CMD: ${{ needs.test-scenario-3-reader.outputs.TEST-CMD }}
-      CI_CODESCAN: ${{ needs.test-scenario-3-reader.outputs.CI-CODESCAN }}
-      CI_BLD_CMD: ${{ needs.test-scenario-3-reader.outputs.CI-BLD-CMD }}
-      CD_NPROD_ENV: ${{ needs.test-scenario-3-reader.outputs.CD-NPROD-ENV }}
-    steps:
-      - name: Reading from previous config reader 3
-        run:  |
-          echo PROJECT_NAME: ${PROJECT_NAME}
-          echo TEST1_FLAG: ${TEST1_FLAG}
-          echo TEST2_FLAG: ${TEST2_FLAG}
-          echo TEST_CMD: ${TEST_CMD}
-          echo CI_CODESCAN: ${CI_CODESCAN}
-          echo CI_BLD_CMD: ${CI_BLD_CMD}
-          echo CD_NPROD_ENV: ${CD_NPROD_ENV}
-
-  test-scenario-4-reader:
-    runs-on: ubuntu-latest
-    outputs:
-      CONFIG_IMPORTER: ./${{ steps.yaml-importer-creator.outputs.importer-filename}}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Test with upload flag
-        id: yaml-importer-creator
-        uses: partior-libs/gcs-yaml-importer@partior-stable
-        with:
-          yaml-file: test-yaml/testing.yaml
-          query-path: .project4
-          output-file: ${{ env.CONFIG_IMPORTER_4 }}
-          yaml-file-for-default: test-yaml/testing.yaml
-          query-path-for-default: .default
-          upload: true
-
-  test-scenario-4-consumer:
-    runs-on: ubuntu-latest
-    needs: [ test-scenario-4-reader ]
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: ${{ env.CONFIG_IMPORTER_4 }}
-      - name: Start import
-        id: yml-config
-        run: |
-          echo Importing ...${{ env.CONFIG_IMPORTER_4 }}
-          source ./${{ env.CONFIG_IMPORTER_4 }}   
-
-      - name: Reading from previous config reader 4
-        run:  |
-          echo PROJECT_NAME: ${{ steps.yml-config.outputs.name }}
-          echo PROJECT_NAME4: ${{ steps.yml-config.outputs.name4 }}
-          echo TEST1_FLAG: ${{ steps.yml-config.outputs.test_test1 }}
-          echo TEST2_FLAG: ${{ steps.yml-config.outputs.test_test2 }}
-          echo TEST_CMD: ${{ steps.yml-config.outputs.test_cmd }}
-          echo CI_CODESCAN: ${{ steps.yml-config.outputs.ci-pipeline_codescan }}
-          echo CI_BLD_CMD: ${{ steps.yml-config.outputs.ci-pipeline_build-cmd }}
-          echo CD_NPROD_ENV: ${{ steps.yml-config.outputs.cd-pipeline_prod-environments }}
-
+- id: import-with-defaults
+  uses: partior-libs/gcs-yaml-importer@main
+  with:
+    yaml-file: config/smc-app.yaml
+    yaml-file-for-default: config/smc-default.yaml
+    query-path: .my-service.ci
+    query-path-for-default: .default.ci
+    set-sub-default-keys: ci.branches.default
+    upload: "true"
 ```
 
+### Override artifact base name
+
+```yaml
+- uses: partior-libs/gcs-yaml-importer@main
+  with:
+    yaml-file: config/app.yaml
+    override-artifact-base-name: my-overridden-artifact
+```
+
+## Project Structure
+
+```
+gcs-yaml-importer/
+├── action.yml                         # Composite action definition
+├── scripts/
+│   ├── yaml-converter.sh              # Core yq-based YAML → env-var conversion
+│   ├── clean-files.sh                 # Removes stale importer files before generation
+│   └── get-importer-filename.sh       # Resolves/returns the importer file path
+├── config/
+│   └── general.ini                    # Default configuration constants
+├── test-yaml/
+│   ├── smc-app.yaml                   # Example primary YAML for testing
+│   ├── smc-default.yaml               # Example default YAML for testing
+│   └── testing.yaml                   # Additional test fixture
+└── .github/workflows/
+    ├── ci-workflow.yaml               # Main CI pipeline
+    ├── unit-test.yml                  # Unit test workflow
+    └── tag-partior-stable.yml         # Stable release tagging
+```
+
+## Contributing
+
+1. Fork the repository and create a feature branch.
+2. Add test YAML files to `test-yaml/` to cover new scenarios.
+3. Run the unit tests via `.github/workflows/unit-test.yml`.
+4. Open a pull request targeting `main`.
+
+## License
+
+Proprietary — Copyright 2025 Partior. All rights reserved.
